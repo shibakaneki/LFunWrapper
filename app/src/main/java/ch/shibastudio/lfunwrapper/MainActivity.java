@@ -5,12 +5,14 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import ch.shibastudio.liquidwrapper.HelloWrapper;
+import ch.shibastudio.liquidwrapper.dynamics.World;
 
 public class MainActivity extends AppCompatActivity {
 
 	// Used to load the 'native-lib' library on application startup.
 	static {
-		System.loadLibrary("liquidwrapper-lib");
+		System.loadLibrary("liquidfun");
+		System.loadLibrary("liquidwrapper");
 	}
 
 	@Override
@@ -23,5 +25,10 @@ public class MainActivity extends AppCompatActivity {
 		// Example of a call to a native method
 		TextView tv = (TextView) findViewById(R.id.sample_text);
 		tv.setText(wrapper.stringFromJNI());
+
+		World world = new World(1.0f, 3.0f);
+
+		System.out.println("test " +world.toString());
+
 	}
 }

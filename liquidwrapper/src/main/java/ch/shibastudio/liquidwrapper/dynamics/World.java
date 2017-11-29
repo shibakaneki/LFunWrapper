@@ -36,6 +36,4 @@ public class World {
 	public World(float gravityX, float gravityY){
 		this(LiquidWrapperJNI.new_World(gravityX, gravityY));
 	}
-
-
 }

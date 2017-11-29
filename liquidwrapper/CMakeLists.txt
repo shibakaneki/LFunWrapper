@@ -11,7 +11,7 @@ cmake_minimum_required(VERSION 3.4.1)
 # Gradle automatically packages shared libraries with your APK.
 
 add_library( # Sets the name of the library.
-             liquidwrapper-lib
+             liquidwrapper
 
              # Sets the library as a shared library.
              SHARED
@@ -19,6 +19,16 @@ add_library( # Sets the name of the library.
              # Provides a relative path to your source file(s).
              src/main/cpp/native-lib.cpp
              src/main/cpp/liquidwrapper.cpp)
+
+add_library( liquidfun
+             SHARED
+             IMPORTED)
+
+set_target_properties(liquidfun
+                      PROPERTIES IMPORTED_LOCATION
+                      ${PROJECT_SOURCE_DIR}/libs/liquidfun/src/${ANDROID_ABI}/libliquidfun.so )
+
+include_directories( libs/liquidfun/include/ )
 
 # Searches for a specified prebuilt library and stores the path as a
 # variable. Because CMake includes system libraries in the search path by
@@ -37,8 +47,8 @@ find_library( # Sets the name of the path variable.
 # can link multiple libraries, such as libraries you define in this
 # build script, prebuilt third-party libraries, or system libraries.
 
-target_link_libraries( # Specifies the target library.
-                       liquidwrapper-lib
+target_link_libraries( liquidwrapper
+                       liquidfun
 
                        # Links the target library to the log library
                        # included in the NDK.
