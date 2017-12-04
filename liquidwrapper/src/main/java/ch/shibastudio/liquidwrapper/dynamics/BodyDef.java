@@ -9,15 +9,6 @@ import ch.shibastudio.liquidwrapper.common.Vec2;
  */
 
 public class BodyDef extends AbstractNativeObject {
-	private Vec2 position;
-	private Vec2 linearVelocity;
-
-	private boolean isAllowingSleep;
-	private boolean isAwake;
-	private boolean isFixedRotation;
-	private boolean isBullet;
-	private boolean isActive;
-
 	public BodyDef(){
 		super(LiquidWrapperJNI.BodyDef_new());
 	}
@@ -43,7 +34,7 @@ public class BodyDef extends AbstractNativeObject {
 	 * @param position as the position.
 	 */
 	public void setPosition(Vec2 position){
-		this.position = position;
+		LiquidWrapperJNI.BodyDef_setPosition(super.getPtr(), position.getPtr());
 	}
 
 	/**
@@ -51,7 +42,8 @@ public class BodyDef extends AbstractNativeObject {
 	 * @return the position.
 	 */
 	public Vec2 getPosition(){
-		return this.position;
+		long posPtr = LiquidWrapperJNI.BodyDef_getPosition(super.getPtr());
+		return new Vec2(posPtr);
 	}
 
 	/**
@@ -75,7 +67,7 @@ public class BodyDef extends AbstractNativeObject {
 	 * @param linearVelocity as the linear velocity.
 	 */
 	public void setLinearVelocity(Vec2 linearVelocity){
-		this.linearVelocity = linearVelocity;
+		LiquidWrapperJNI.BodyDef_setLinearVelocity(super.getPtr(), linearVelocity.getPtr());
 	}
 
 	/**
@@ -83,7 +75,7 @@ public class BodyDef extends AbstractNativeObject {
 	 * @return the linear velocity.
 	 */
 	public Vec2 getLinearVelocity(){
-		return this.linearVelocity;
+		return new Vec2(LiquidWrapperJNI.BodyDef_getLinearVelocity(super.getPtr()));
 	}
 
 	/**
@@ -155,7 +147,7 @@ public class BodyDef extends AbstractNativeObject {
 	 * @param allowSleep as the sleep allowance.
 	 */
 	public void setAllowSleep(boolean allowSleep){
-		this.isAllowingSleep = allowSleep;
+		LiquidWrapperJNI.BodyDef_setAllowSleep(super.getPtr(), allowSleep);
 	}
 
 	/**
@@ -163,7 +155,7 @@ public class BodyDef extends AbstractNativeObject {
 	 * @return true if allowing sleep; otherwise false.
 	 */
 	public boolean isAllowingSleep(){
-		return this.isAllowingSleep;
+		return LiquidWrapperJNI.BodyDef_getAllowSleep(super.getPtr());
 	}
 
 	/**
@@ -171,7 +163,7 @@ public class BodyDef extends AbstractNativeObject {
 	 * @param awake as the awake state.
 	 */
 	public void setAwake(boolean awake){
-		this.isAwake = awake;
+		LiquidWrapperJNI.BodyDef_setAwake(super.getPtr(), awake);
 	}
 
 	/**
@@ -179,7 +171,7 @@ public class BodyDef extends AbstractNativeObject {
 	 * @return true if awake; otherwise false.
 	 */
 	public boolean isAwake(){
-		return this.isAwake;
+		return LiquidWrapperJNI.BodyDef_getAwake(super.getPtr());
 	}
 
 	/**
@@ -187,7 +179,7 @@ public class BodyDef extends AbstractNativeObject {
 	 * @param isFixed as the rotation state.
 	 */
 	public void setFixedRotation(boolean isFixed){
-		this.isFixedRotation = isFixed;
+		LiquidWrapperJNI.BodyDef_setFixedRotation(super.getPtr(), isFixed);
 	}
 
 	/**
@@ -195,7 +187,7 @@ public class BodyDef extends AbstractNativeObject {
 	 * @return true if the rotation is fixed; otherwise false.
 	 */
 	public boolean isFixedRotation(){
-		return this.isFixedRotation;
+		return LiquidWrapperJNI.BodyDef_getFixedRotation(super.getPtr());
 	}
 
 	/**
@@ -203,7 +195,7 @@ public class BodyDef extends AbstractNativeObject {
 	 * @param isBullet as the bullet state.
 	 */
 	public void setBullet(boolean isBullet){
-		this.isBullet = isBullet;
+		LiquidWrapperJNI.BodyDef_setBullet(super.getPtr(), isBullet);
 	}
 
 	/**
@@ -211,7 +203,7 @@ public class BodyDef extends AbstractNativeObject {
 	 * @return true if the body is a bullet; otherwise false.
 	 */
 	public boolean isBullet(){
-		return this.isBullet;
+		return LiquidWrapperJNI.BodyDef_getBullet(super.getPtr());
 	}
 
 	/**
@@ -219,7 +211,7 @@ public class BodyDef extends AbstractNativeObject {
 	 * @param isActive as the active state.
 	 */
 	public void setActive(boolean isActive){
-		this.isActive = isActive;
+		LiquidWrapperJNI.BodyDef_setActive(super.getPtr(), isActive);
 	}
 
 	/**
@@ -227,6 +219,6 @@ public class BodyDef extends AbstractNativeObject {
 	 * @return true if the body is active; otherwise false.
 	 */
 	public boolean isActive(){
-		return this.isActive;
+		return LiquidWrapperJNI.BodyDef_getActive(super.getPtr());
 	}
 }

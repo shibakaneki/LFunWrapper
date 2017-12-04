@@ -13,6 +13,22 @@ public class LiquidWrapperJNI {
 	public final static native void World_delete(long worldPtr);
 	public final static native void World_step2(long worldPtr, float timeStep, int velocityIterations, int positionIterations);
 	public final static native void World_step(long worldPtr, float timeStep, int velocityIterations, int positionIterations, int particleIterations);
+	public final static native long World_createBody(long worldPtr, long bodyDefPtr);
+
+	// Vec2
+	public final static native long Vec2_new();
+	public final static native long Vec2_new2(float x, float y);
+	public final static native void Vec2_setZero(long vec2Ptr);
+	public final static native void Vec2_set(long vec2Ptr, float x, float y);
+	public final static native float Vec2_length(long vec2Ptr);
+	public final static native float Vec2_lengthSquared(long vec2Ptr);
+	public final static native float Vec2_normalize(long vec2Ptr);
+	public final static native boolean Vec2_isValid(long vec2Ptr);
+	public final static native long Vec2_skew(long vec2Ptr);
+	public final static native void Vec2_setX(long vec2Ptr, float x);
+	public final static native float Vec2_getX(long vec2Ptr);
+	public final static native void Vec2_setY(long vec2Ptr, float y);
+	public final static native float Vec2_getY(long vec2Ptr);
 
 	// BodyDef
 	public final static native long BodyDef_new();
@@ -28,5 +44,22 @@ public class LiquidWrapperJNI {
 	public final static native float BodyDef_getLinearDamping(long bodyDefPtr);
 	public final static native void BodyDef_setGravityScale(long bodyDefPtr, float gravityScale);
 	public final static native float BodyDef_getGravityScale(long bodyDefPtr);
+	public final static native void BodyDef_setAllowSleep(long bodyDefPtr, boolean allowSleep);
+	public final static native boolean BodyDef_getAllowSleep(long bodyDefPtr);
+	public final static native void BodyDef_setAwake(long bodyDefPtr, boolean isAwake);
+	public final static native boolean BodyDef_getAwake(long bodyDefPtr);
+	public final static native void BodyDef_setFixedRotation(long bodyDefPtr, boolean isFixed);
+	public final static native boolean BodyDef_getFixedRotation(long bodyDefPtr);
+	public final static native void BodyDef_setBullet(long bodyDefPtr, boolean isBullet);
+	public final static native boolean BodyDef_getBullet(long bodyDefPtr);
+	public final static native void BodyDef_setActive(long bodyDefPtr, boolean isActive);
+	public final static native boolean BodyDef_getActive(long bodyDefPtr);
+	public final static native void BodyDef_setPosition(long bodyDefPtr, long vec2PosPtr);
+	public final static native long BodyDef_getPosition(long bodyDefPtr);
+	public final static native void BodyDef_setLinearVelocity(long bodyDefPtr, long linearVelocityPtr);
+	public final static native long BodyDef_getLinearVelocity(long bodyDefPtr);
 
+	// Body
+	public final static native long Body_createFixture(long bodyPtr, long fixtureDefPtr);
+	public final static native long Body_createFixture2(long bodyPtr, long shapePtr, float density);
 }

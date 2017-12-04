@@ -32,7 +32,7 @@ public abstract class AbstractNativeObject {
 	 * Gets the pointer to the object.
 	 * @return the pointer.
 	 */
-	protected long getPtr(){
+	public long getPtr(){
 		return this.cPtr;
 	}
 }

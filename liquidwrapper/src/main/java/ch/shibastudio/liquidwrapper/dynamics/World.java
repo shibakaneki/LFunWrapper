@@ -37,4 +37,13 @@ public class World extends AbstractNativeObject{
 	public void step(float timeStep, int velocityIterations, int positionIterations, int particleIterations){
 		LiquidWrapperJNI.World_step(super.getPtr(), timeStep, velocityIterations, positionIterations, particleIterations);
 	}
+
+	/**
+	 * Creates a body.
+	 * @param bodyDef as the body definition.
+	 * @return the created body.
+	 */
+	public Body createBody(BodyDef bodyDef){
+		return new Body(LiquidWrapperJNI.World_createBody(super.getPtr(), bodyDef.getPtr()));
+	}
 }

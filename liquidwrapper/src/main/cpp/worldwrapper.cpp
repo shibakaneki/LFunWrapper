@@ -58,7 +58,17 @@ JNIEXPORT void JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_World_
     }
 }
 
+JNIEXPORT jlong JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_World_1createBody(
+        JNIEnv* env,
+        jobject obj,
+        jlong worldPtr,
+        jlong bodyDefPtr){
 
+    b2World* world = (b2World*)worldPtr;
+    b2BodyDef* def = (b2BodyDef*)bodyDefPtr;
+
+    return (jlong)world->CreateBody(def);
+}
 
 #ifdef __cplusplus
 }
