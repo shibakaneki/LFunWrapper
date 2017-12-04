@@ -28,7 +28,5 @@ public class MainActivity extends AppCompatActivity {
 
 		World world = new World(1.0f, 3.0f);
 
-		System.out.println("test " +world.toString());
-
 	}
 }
