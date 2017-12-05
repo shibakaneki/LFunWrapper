@@ -11,11 +11,11 @@ public enum BodyType {
 
 	private final int value;
 
-	private BodyType(){
+	BodyType(){
 		this.value = 0;
 	}
 
-	private BodyType(int value){
+	BodyType(int value){
 		this.value = value;
 	}
 }

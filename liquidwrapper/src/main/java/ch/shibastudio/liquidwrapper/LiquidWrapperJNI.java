@@ -62,4 +62,28 @@ public class LiquidWrapperJNI {
 	// Body
 	public final static native long Body_createFixture(long bodyPtr, long fixtureDefPtr);
 	public final static native long Body_createFixture2(long bodyPtr, long shapePtr, float density);
+	public final static native void Body_destroyFixture(long bodyPtr, long fixturePtr);
+	public final static native long Body_getPosition(long bodyPtr);
+	public final static native float Body_getAngle(long bodyPtr);
+	public final static native void Body_setTransform(long bodyPtr, long posPtr, float angle);
+
+	// FixtureDef
+	public final static native long FixtureDef_new();
+	public final static native void FixtureDef_setShape(long fixtureDefPtr, long shapePtr);
+	public final static native long FixtureDef_getShape(long fixtureDefPtr);
+	public final static native void FixtureDef_setFriction(long fixtureDefPtr, float friction);
+	public final static native float FixtureDef_getFriction(long fixtureDefPtr);
+	public final static native void FixtureDef_setRestitution(long fixtureDefPtr, float restitution);
+	public final static native float FixtureDef_getRestitution(long fixtureDefPtr);
+	public final static native void FixtureDef_setDensity(long fixtureDefPtr, float density);
+	public final static native float FixtureDef_getDensity(long fixtureDefPtr);
+	public final static native void FixtureDef_setSensor(long fixtureDefPtr, boolean isSensor);
+	public final static native boolean FixtureDef_isSensor(long fixtureDefPtr);
+
+	// Shape
+	public final static native void Shape_setType(long shapePtr, int type);
+	public final static native int Shape_getType(long shaptPtr);
+	public final static native int Shape_getChildCount(long shaptPtr);
+	public final static native float Shape_getRadius(long shapePtr);
+	public final static native void Shape_setRadius(long shapePtr, float radius);
 }

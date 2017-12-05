@@ -12,5 +12,12 @@ public class Body extends AbstractNativeObject{
 		super(ptr);
 	}
 
+	public Fixture createFixture(FixtureDef fixtureDef){
+		// TODO: Implement me!
+		return null;
+	}
+
+
+
 	// TODO: Implement me!
 }
