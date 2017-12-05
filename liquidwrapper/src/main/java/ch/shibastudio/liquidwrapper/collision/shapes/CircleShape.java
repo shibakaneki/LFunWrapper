@@ -8,4 +8,6 @@ public class CircleShape extends Shape {
 	public CircleShape(long ptr){
 		super(ptr);
 	}
+
+	// TODO: Wrap this class
 }

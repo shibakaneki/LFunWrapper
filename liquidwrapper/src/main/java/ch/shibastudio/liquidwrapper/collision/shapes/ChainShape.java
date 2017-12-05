@@ -8,4 +8,6 @@ public class ChainShape extends Shape {
 	public ChainShape(long ptr){
 		super(ptr);
 	}
+
+	// TODO: Wrap this class
 }

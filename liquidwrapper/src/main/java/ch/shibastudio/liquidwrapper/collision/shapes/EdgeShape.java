@@ -8,4 +8,7 @@ public class EdgeShape extends Shape {
 	public EdgeShape(long ptr){
 		super(ptr);
 	}
+
+
+	// TODO: Wrap this class
 }

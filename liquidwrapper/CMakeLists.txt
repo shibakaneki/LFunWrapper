@@ -19,6 +19,7 @@ add_library( # Sets the name of the library.
              # Provides a relative path to your source file(s).
              src/main/cpp/native-lib.cpp
              src/main/cpp/worldwrapper.cpp
+             src/main/cpp/polygonshapewrapper.cpp
              src/main/cpp/shapewrapper.cpp
              src/main/cpp/fixturedefwrapper.cpp
              src/main/cpp/bodywrapper.cpp
