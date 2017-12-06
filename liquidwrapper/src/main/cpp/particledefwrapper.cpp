@@ -30,7 +30,7 @@ JNIEXPORT jint JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Partic
         jlong particleDefPtr){
 
     b2ParticleDef* pPdef = (b2ParticleDef*)particleDefPtr;
-    return (jint)&pPdef->flags;
+    return (jint)pPdef->flags;
 }
 
 JNIEXPORT void JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_ParticleDef_1setPosition(
