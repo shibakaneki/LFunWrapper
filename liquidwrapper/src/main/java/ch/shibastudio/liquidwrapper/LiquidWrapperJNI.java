@@ -107,4 +107,20 @@ public class LiquidWrapperJNI {
 	public final static native void PolygonShape_setAsBox(long pshapePtr, float x, float y);
 	public final static native void PolygonShape_setAsBox2(long pshapePtr, float x, float y, long centerPtr, float angle);
 	public final static native int PolygonShape_getVertexCount(long pshapePtr);
+
+	// ParticleDef
+	public final static native long ParticleDef_new();
+	public final static native void ParticleDef_setFlags(long particleDefPtr, int flag);
+	public final static native int ParticleDef_getFlags(long particleDefPtr);
+	public final static native void ParticleDef_setPosition(long particleDefPtr, long positionPtr);
+	public final static native long ParticleDef_getPosition(long particleDefPtr);
+	public final static native void ParticleDef_setVelocity(long particleDefPtr, long velocityPtr);
+	public final static native long ParticleDef_getVelocity(long particleDefPtr);
+	public final static native void ParticleDef_setColor(long particleDefPtr, long colorPtr);
+	public final static native long ParticleDef_getColor(long particleDefPtr);
+	public final static native void ParticleDef_setLifetime(long particleDefPtr, float lifetime);
+	public final static native float ParticleDef_getLifetime(long particleDefPtr);
+	public final static native void ParticleDef_setParticleGroup(long particleDefPtr, long particleGroupPtr);
+	public final static native long ParticleDef_getParticleGroup(long particleDefPtr);
+
 }
