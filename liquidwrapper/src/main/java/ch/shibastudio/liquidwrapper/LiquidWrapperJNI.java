@@ -80,6 +80,20 @@ public class LiquidWrapperJNI {
 	public final static native void FixtureDef_setSensor(long fixtureDefPtr, boolean isSensor);
 	public final static native boolean FixtureDef_isSensor(long fixtureDefPtr);
 
+	// Fixture
+	public final static native int Fixture_getType(long fixturePtr);
+	public final static native long Fixture_getShape(long fixturePtr);
+	public final static native void Fixture_setSensor(long fixturePtr, boolean isSensor);
+	public final static native boolean Fixture_isSensor(long fixturePtr);
+	public final static native long Fixture_getBody(long fixturePtr);
+	public final static native long Fixture_getNext(long fixturePtr);
+	public final static native void Fixture_setDensity(long fixturePtr, float density);
+	public final static native float Fixture_getDensity(long fixturePtr);
+	public final static native void Fixture_setFriction(long fixturePtr, float density);
+	public final static native float Fixture_getFriction(long fixturePtr);
+	public final static native void Fixture_setRestitution(long fixturePtr, float density);
+	public final static native float Fixture_getRestitution(long fixturePtr);
+
 	// Shape
 	public final static native void Shape_setType(long shapePtr, int type);
 	public final static native int Shape_getType(long shaptPtr);

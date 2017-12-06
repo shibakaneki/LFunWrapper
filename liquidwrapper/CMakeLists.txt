@@ -21,6 +21,7 @@ add_library( # Sets the name of the library.
              src/main/cpp/worldwrapper.cpp
              src/main/cpp/polygonshapewrapper.cpp
              src/main/cpp/shapewrapper.cpp
+             src/main/cpp/fixturewrapper.cpp
              src/main/cpp/fixturedefwrapper.cpp
              src/main/cpp/bodywrapper.cpp
              src/main/cpp/bodydefwrapper.cpp
