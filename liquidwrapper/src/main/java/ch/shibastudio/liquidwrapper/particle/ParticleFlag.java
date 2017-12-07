@@ -5,24 +5,24 @@ package ch.shibastudio.liquidwrapper.particle;
  */
 
 public enum ParticleFlag {
-	b2_waterParticle(0),
-	b2_zombieParticle(1 << 1),
-	b2_wallParticle(1 << 2),
-	b2_springParticle(1 << 3),
-	b2_elasticParticle(1 << 4),
-	b2_viscousParticle(1 << 5),
-	b2_powderParticle(1 << 6),
-	b2_tensileParticle(1 << 7),
-	b2_colorMixingParticle(1 << 8),
-	b2_destructionListenerParticle(1 << 9),
-	b2_barrierParticle(1 << 10),
-	b2_staticPressureParticle(1 << 11),
-	b2_reactiveParticle(1 << 12),
-	b2_repulsiveParticle(1 << 13),
-	b2_fixtureContactListenerParticle(1 << 14),
-	b2_particleContactListenerParticle(1 << 15),
-	b2_fixtureContactFilterParticle(1 << 16),
-	b2_particleContactFilterParticle(1 << 17);
+	waterParticle(0),
+	zombieParticle(1 << 1),
+	wallParticle(1 << 2),
+	springParticle(1 << 3),
+	elasticParticle(1 << 4),
+	viscousParticle(1 << 5),
+	powderParticle(1 << 6),
+	tensileParticle(1 << 7),
+	colorMixingParticle(1 << 8),
+	destructionListenerParticle(1 << 9),
+	barrierParticle(1 << 10),
+	staticPressureParticle(1 << 11),
+	reactiveParticle(1 << 12),
+	repulsiveParticle(1 << 13),
+	fixtureContactListenerParticle(1 << 14),
+	particleContactListenerParticle(1 << 15),
+	fixtureContactFilterParticle(1 << 16),
+	particleContactFilterParticle(1 << 17);
 
 	private final int value;
 
