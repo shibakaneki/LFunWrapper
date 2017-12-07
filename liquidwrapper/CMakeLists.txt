@@ -27,6 +27,7 @@ add_library( # Sets the name of the library.
              src/main/cpp/bodydefwrapper.cpp
              src/main/cpp/vec2wrapper.cpp
              src/main/cpp/colorwrapper.cpp
+             src/main/cpp/particlesystemdefwrapper.cpp
              src/main/cpp/particledefwrapper.cpp
              src/main/cpp/particlecolorwrapper.cpp
              src/main/cpp/liquidwrapper.cpp)

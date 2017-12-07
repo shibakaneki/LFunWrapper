@@ -139,5 +139,46 @@ public class LiquidWrapperJNI {
 	public final static native boolean ParticleColor_isZero(long particleColorPtr);
 	public final static native void ParticleColor_set(long particleColorPtr, int r, int g, int b, int a);
 
-
+	// ParticleSystemDef
+	public final static native long ParticleSystemDef_new();
+	public final static native void ParticleSystemDef_setDensity(long particleSystemDefPtr, float density);
+	public final static native float ParticleSystemDef_getDensity(long particleSystemDefPtr);
+	public final static native void ParticleSystemDef_setGravityScale(long particleSystemDefPtr, float gravityScale);
+	public final static native float ParticleSystemDef_getGravityScale(long particleSystemDefPtr);
+	public final static native void ParticleSystemDef_setRadius(long particleSystemDefPtr, float radius);
+	public final static native float ParticleSystemDef_getRadius(long particleSystemDefPtr);
+	public final static native void ParticleSystemDef_setMaxCount(long particleSystemDefPtr, int maxCount);
+	public final static native int ParticleSystemDef_getMaxCount(long particleSystemDefPtr);
+	public final static native void ParticleSystemDef_setPressureStrength(long particleSystemDefPtr, float pressureStrength);
+	public final static native float ParticleSystemDef_getPressureStrength(long particleSystemDefPtr);
+	public final static native void ParticleSystemDef_setDampingStrength(long particleSystemDefPtr, float dampingStrength);
+	public final static native float ParticleSystemDef_getDampingStrength(long particleSystemDefPtr);
+	public final static native void ParticleSystemDef_setElasticStrength(long particleSystemDefPtr, float elasticStrength);
+	public final static native float ParticleSystemDef_getElasticStrength(long particleSystemDefPtr);
+	public final static native void ParticleSystemDef_setSpringStrength(long particleSystemDefPtr, float springStrength);
+	public final static native float ParticleSystemDef_getSpringStrength(long particleSystemDefPtr);
+	public final static native void ParticleSystemDef_setViscousStrength(long particleSystemDefPtr, float viscousStrength);
+	public final static native float ParticleSystemDef_getViscousStrength(long particleSystemDefPtr);
+	public final static native void ParticleSystemDef_setSurfaceTensionPressureStrength(long particleSystemDefPtr, float surfaceTensionPressureStrength);
+	public final static native float ParticleSystemDef_getSurfaceTensionPressureStrength(long particleSystemDefPtr);
+	public final static native void ParticleSystemDef_setSurfaceTensionNormalStrength(long particleSystemDefPtr, float surfaceTensionNormalStrength);
+	public final static native float ParticleSystemDef_getSurfaceTensionNormalStrength(long particleSystemDefPtr);
+	public final static native void ParticleSystemDef_setRepulsiveStrength(long particleSystemDefPtr, float repulsiveStrength);
+	public final static native float ParticleSystemDef_getRepulsiveStrength(long particleSystemDefPtr);
+	public final static native void ParticleSystemDef_setPowderStrength(long particleSystemDefPtr, float powderStrength);
+	public final static native float ParticleSystemDef_getPowderStrength(long particleSystemDefPtr);
+	public final static native void ParticleSystemDef_setEjectionStrength(long particleSystemDefPtr, float ejectionStrength);
+	public final static native float ParticleSystemDef_getEjectionStrength(long particleSystemDefPtr);
+	public final static native void ParticleSystemDef_setStaticPressureStrength(long particleSystemDefPtr, float staticPressureStrength);
+	public final static native float ParticleSystemDef_getStaticPressureStrength(long particleSystemDefPtr);
+	public final static native void ParticleSystemDef_setStaticPressureRelaxation(long particleSystemDefPtr, float staticPressureRelaxation);
+	public final static native float ParticleSystemDef_getStaticPressureRelaxation(long particleSystemDefPtr);
+	public final static native void ParticleSystemDef_setStaticPressureIterations(long particleSystemDefPtr, int staticPressureIterations);
+	public final static native int ParticleSystemDef_getStaticPressureIterations(long particleSystemDefPtr);
+	public final static native void ParticleSystemDef_setColorMixingStrength(long particleSystemDefPtr, float colorMixingStrength);
+	public final static native float ParticleSystemDef_getColorMixingStrength(long particleSystemDefPtr);
+	public final static native void ParticleSystemDef_setDestroyByAge(long particleSystemDefPtr, boolean destroy);
+	public final static native boolean ParticleSystemDef_isDestroyByAge(long particleSystemDefPtr);
+	public final static native void ParticleSystemDef_setLifetimeGranularity(long particleSystemDefPtr, float lifetimeGranularity);
+	public final static native float ParticleSystemDef_getLifetimeGranularity(long particleSystemDefPtr);
 }
