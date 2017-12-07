@@ -30,6 +30,16 @@ public class LiquidWrapperJNI {
 	public final static native void Vec2_setY(long vec2Ptr, float y);
 	public final static native float Vec2_getY(long vec2Ptr);
 
+	// Color
+	public final static native long Color_new(float r, float g, float b);
+	public final static native void Color_set(long colorPtr, float r, float g, float b);
+	public final static native void Color_setRed(long colorPtr, float r);
+	public final static native float Color_getRed(long colorPtr);
+	public final static native void Color_setGreen(long colorPtr, float g);
+	public final static native float Color_getGreen(long colorPtr);
+	public final static native void Color_setBlue(long colorPtr, float b);
+	public final static native float Color_getBlue(long colorPtr);
+
 	// BodyDef
 	public final static native long BodyDef_new();
 	public final static native void BodyDef_setType(long bodyDefPtr, int type);
@@ -122,5 +132,12 @@ public class LiquidWrapperJNI {
 	public final static native float ParticleDef_getLifetime(long particleDefPtr);
 	public final static native void ParticleDef_setParticleGroup(long particleDefPtr, long particleGroupPtr);
 	public final static native long ParticleDef_getParticleGroup(long particleDefPtr);
+
+	// ParticleColor
+	public final static native long ParticleColor_new();
+	public final static native long ParticleColor_new2(int r, int g, int b, int a);
+	public final static native boolean ParticleColor_isZero(long particleColorPtr);
+	public final static native void ParticleColor_set(long particleColorPtr, int r, int g, int b, int a);
+
 
 }
