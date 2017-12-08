@@ -8,6 +8,7 @@ import ch.shibastudio.liquidwrapper.collision.shapes.EdgeShape;
 import ch.shibastudio.liquidwrapper.collision.shapes.PolygonShape;
 import ch.shibastudio.liquidwrapper.collision.shapes.Shape;
 import ch.shibastudio.liquidwrapper.collision.shapes.ShapeType;
+import ch.shibastudio.liquidwrapper.collision.shapes.ShapeUtils;
 
 /**
  * Created by shibakaneki on 27.11.17.
@@ -31,16 +32,7 @@ public class FixtureDef extends AbstractNativeObject{
 	 * @return the shape.
 	 */
 	public Shape getShape(){
-		long shapePtr = LiquidWrapperJNI.FixtureDef_getShape(super.getPtr());
-
-		switch(ShapeType.values()[LiquidWrapperJNI.Shape_getType(shapePtr)]){
-			case edge: return new EdgeShape(shapePtr);
-			case polygon: return new PolygonShape(shapePtr);
-			case chain: return new ChainShape(shapePtr);
-			case circle: return new CircleShape(shapePtr);
-		}
-
-		return null;
+		return ShapeUtils.getShapeFromPointer(LiquidWrapperJNI.FixtureDef_getShape(super.getPtr()));
 	}
 
 	/**

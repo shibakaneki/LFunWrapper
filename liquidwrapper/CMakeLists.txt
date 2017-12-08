@@ -30,6 +30,7 @@ add_library( # Sets the name of the library.
              src/main/cpp/particlesystemdefwrapper.cpp
              src/main/cpp/particledefwrapper.cpp
              src/main/cpp/particlegroupwrapper.cpp
+             src/main/cpp/particlegroupdefwrapper.cpp
              src/main/cpp/particlecolorwrapper.cpp
              src/main/cpp/liquidwrapper.cpp)
 

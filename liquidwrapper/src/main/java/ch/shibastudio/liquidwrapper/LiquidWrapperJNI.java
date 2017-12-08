@@ -181,4 +181,41 @@ public class LiquidWrapperJNI {
 	public final static native boolean ParticleSystemDef_isDestroyByAge(long particleSystemDefPtr);
 	public final static native void ParticleSystemDef_setLifetimeGranularity(long particleSystemDefPtr, float lifetimeGranularity);
 	public final static native float ParticleSystemDef_getLifetimeGranularity(long particleSystemDefPtr);
+
+	// ParticleGroupDef
+	public final static native long ParticleGroupDef_new();
+	public final static native void ParticleGroupDef_setFlags(long particleGroupDefPtr, int flags);
+	public final static native int ParticleGroupDef_getFlags(long particleGroupDefPtr);
+	public final static native void ParticleGroupDef_setGroupFlags(long particleGroupDefPtr, int flags);
+	public final static native int ParticleGroupDef_getGroupFlags(long particleGroupDefPtr);
+	public final static native void ParticleGroupDef_setPosition(long particleGroupDefPtr, long posPtr);
+	public final static native long ParticleGroupDef_getPosition(long particleGroupDefPtr);
+	public final static native void ParticleGroupDef_setAngle(long particleGroupDefPtr, float angle);
+	public final static native float ParticleGroupDef_getAngle(long particleGroupDefPtr);
+	public final static native void ParticleGroupDef_setLinearVelocity(long particleGroupDefPtr, long velocityPtr);
+	public final static native long ParticleGroupDef_getLinearVelocity(long particleGroupDefPtr);
+	public final static native void ParticleGroupDef_setAngularVelocity(long particleGroupDefPtr, float velocity);
+	public final static native float ParticleGroupDef_getAngularVelocity(long particleGroupDefPtr);
+	public final static native void ParticleGroupDef_setColor(long particleGroupDefPtr, long colorPtr);
+	public final static native long ParticleGroupDef_getColor(long particleGroupDefPtr);
+	public final static native void ParticleGroupDef_setStrength(long particleGroupDefPtr, float strength);
+	public final static native float ParticleGroupDef_getStrength(long particleGroupDefPtr);
+	public final static native void ParticleGroupDef_setShape(long particleGroupDefPtr, long shapePtr);
+	public final static native long ParticleGroupDef_getShape(long particleGroupDefPtr);
+	public final static native void ParticleGroupDef_setShapes(long particleGroupDefPtr, long shapesPtr);
+	public final static native long ParticleGroupDef_getShapes(long particleGroupDefPtr);
+	public final static native void ParticleGroupDef_setShapeCount(long particleGroupDefPtr, int count);
+	public final static native int ParticleGroupDef_getShapeCount(long particleGroupDefPtr);
+	public final static native void ParticleGroupDef_setStride(long particleGroupDefPtr, float stride);
+	public final static native float ParticleGroupDef_getStride(long particleGroupDefPtr);
+	public final static native void ParticleGroupDef_setParticleCount(long particleGroupDefPtr, int count);
+	public final static native int ParticleGroupDef_getParticleCount(long particleGroupDefPtr);
+	public final static native void ParticleGroupDef_setPositionData(long particleGroupDefPtr, long positionsPtr);
+	public final static native long ParticleGroupDef_getPositionData(long particleGroupDefPtr);
+	public final static native void ParticleGroupDef_setLifetime(long particleGroupDefPtr, float lifetime);
+	public final static native float ParticleGroupDef_getLifetime(long particleGroupDefPtr);
+	public final static native void ParticleGroupDef_setGroup(long particleGroupDefPtr, long groupPtr);
+	public final static native long ParticleGroupDef_getGroup(long particleGroupDefPtr);
+
+
 }
