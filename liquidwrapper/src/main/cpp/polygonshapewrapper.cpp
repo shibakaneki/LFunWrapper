@@ -16,16 +16,12 @@ JNIEXPORT void JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Polygo
         JNIEnv* env,
         jobject obj,
         jlong psPtr,
-        jlongArray points,
+        jlong pointsPtr,
         jint count){
 
-    // Note: We need to verify if this code is doing the right thing.
     b2PolygonShape* shape = (b2PolygonShape*)psPtr;
-
-    jlong* elems = env->GetLongArrayElements(points, (bool)false);
-    shape->Set((b2Vec2*)elems, count);
-
-    env->ReleaseLongArrayElements(points, elems, 0);
+    b2Vec2* pPoints = (b2Vec2*)pointsPtr;
+    shape->Set(pPoints, count);
 
 }
 

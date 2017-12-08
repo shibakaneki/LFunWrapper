@@ -113,7 +113,7 @@ public class LiquidWrapperJNI {
 
 	// PolygonShape
 	public final static native long PolygonShape_new();
-	public final static native void PolygonShape_set(long pshapePtr, long[] points, int count);
+	public final static native void PolygonShape_set(long pshapePtr, long pointsPtr, int count);
 	public final static native void PolygonShape_setAsBox(long pshapePtr, float x, float y);
 	public final static native void PolygonShape_setAsBox2(long pshapePtr, float x, float y, long centerPtr, float angle);
 	public final static native int PolygonShape_getVertexCount(long pshapePtr);

@@ -9,9 +9,8 @@ JNIEXPORT void JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_delete
         jobject obj,
         jlong ptr){
 
-    void* cPtr = (void*)ptr;
-    if(NULL != cPtr){
-        delete cPtr;
+    if(0 != ptr){
+        delete (void*)ptr;
     }
 }
 

@@ -21,12 +21,11 @@ public class PolygonShape extends Shape{
 	 * @param points as the list of coordinates.
 	 */
 	public void set(Vec2[] points){
-		long[] pts = new long[points.length];
-		for(int i=0; i<points.length; i++){
-			pts[i] = points[i].getPtr();
+		if(null == points || points.length == 0){
+			return;
 		}
 
-		LiquidWrapperJNI.PolygonShape_set(super.getPtr(), pts, points.length);
+		LiquidWrapperJNI.PolygonShape_set(super.getPtr(), points[0].getPtr(), points.length);
 	}
 
 	/**
