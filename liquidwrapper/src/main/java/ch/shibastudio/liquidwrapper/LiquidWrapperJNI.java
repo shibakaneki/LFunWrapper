@@ -217,5 +217,30 @@ public class LiquidWrapperJNI {
 	public final static native void ParticleGroupDef_setGroup(long particleGroupDefPtr, long groupPtr);
 	public final static native long ParticleGroupDef_getGroup(long particleGroupDefPtr);
 
+	// ParticleGroup
+	public final static native long ParticleGroup_getNext(long particleGroupPtr);
+	public final static native long ParticleGroup_getParticleSystem(long particleGroupPtr);
+	public final static native int ParticleGroup_getParticleCount(long particleGroupPtr);
+	public final static native int ParticleGroup_getBufferIndex(long particleGroupPtr);
+	public final static native boolean ParticleGroup_containsParticle(long particleGroupPtr, int particleIndex);
+	public final static native int ParticleGroup_getAllParticleFlags(long particleGroupPtr);
+	public final static native void ParticleGroup_setGroupFlags(long particleGroupPtr, int flags);
+	public final static native int ParticleGroup_getGroupFlags(long particleGroupPtr);
+	public final static native float ParticleGroup_getMass(long particleGroupPtr);
+	public final static native float ParticleGroup_getInertia(long particleGroupPtr);
+	public final static native long ParticleGroup_getCenter(long particleGroupPtr);
+	public final static native long ParticleGroup_getLinearVelocity(long particleGroupPtr);
+	public final static native float ParticleGroup_getAngularVelocity(long particleGroupPtr);
+	public final static native long ParticleGroup_getTransform(long particleGroupPtr);
+	public final static native long ParticleGroup_getPosition(long particleGroupPtr);
+	public final static native float ParticleGroup_getAngle(long particleGroupPtr);
+	public final static native long ParticleGroup_getLinearVelocityFromWorldPoint(long particleGroupPtr, long worldPointPtr);
+	public final static native void ParticleGroup_applyForce(long particleGroupPtr, long forcePtr);
+	public final static native void ParticleGroup_applyLinearImpulse(long particleGroupPtr, long impulsePtr);
+	public final static native void ParticleGroup_destroyParticles(long particleGroupPtr, boolean callDestructionListener);
+	public final static native void ParticleGroup_destroyParticles2(long particleGroupPtr);
+
+	// ParticleSystem
+
 
 }
