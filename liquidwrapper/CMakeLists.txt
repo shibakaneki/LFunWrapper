@@ -20,6 +20,9 @@ add_library( # Sets the name of the library.
              src/main/cpp/native-lib.cpp
              src/main/cpp/worldwrapper.cpp
              src/main/cpp/polygonshapewrapper.cpp
+             src/main/cpp/circleshapewrapper.cpp
+             src/main/cpp/chainshapewrapper.cpp
+             src/main/cpp/edgeshapewrapper.cpp
              src/main/cpp/shapewrapper.cpp
              src/main/cpp/fixturewrapper.cpp
              src/main/cpp/fixturedefwrapper.cpp
@@ -29,6 +32,7 @@ add_library( # Sets the name of the library.
              src/main/cpp/colorwrapper.cpp
              src/main/cpp/particlesystemdefwrapper.cpp
              src/main/cpp/particledefwrapper.cpp
+             src/main/cpp/particlesystemwrapper.cpp
              src/main/cpp/particlegroupwrapper.cpp
              src/main/cpp/particlegroupdefwrapper.cpp
              src/main/cpp/particlecolorwrapper.cpp

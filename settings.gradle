@@ -1,1 +1,1 @@
-include ':app', ':liquidwrapper'
+include ':app', ':liquidwrapper', ':glcheckuptest'

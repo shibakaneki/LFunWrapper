@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">GLCheckupTest</string>
+    <string name="press_more">Press more</string>
+    <string name="press_less">Press less</string>
+
+
+    <!-- Menu -->
+    <string name="menu_button_gl">OpenGL</string>
+    <string name="menu_button_texture">TextureView</string>
+    <string name="menu_button_texture_test">TextureView Test</string>
+</resources>

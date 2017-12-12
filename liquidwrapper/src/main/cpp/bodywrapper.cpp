@@ -71,6 +71,47 @@ JNIEXPORT jlong JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Body_
     return (jfloat)pBody->GetAngle();
 }
 
+JNIEXPORT void JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Body_1setLinearVelocity(
+        JNIEnv* env,
+        jobject obj,
+        jlong bodyPtr,
+        jlong velocityPtr){
+
+    b2Body* pBody = (b2Body*)bodyPtr;
+    b2Vec2* pVelocity = (b2Vec2*)velocityPtr;
+    pBody->SetLinearVelocity(*pVelocity);
+}
+
+JNIEXPORT void JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Body_1setAngularVelocity(
+        JNIEnv* env,
+        jobject obj,
+        jlong bodyPtr,
+        jfloat velocity){
+
+    b2Body* pBody = (b2Body*)bodyPtr;
+    pBody->SetAngularVelocity((float32)velocity);
+}
+
+JNIEXPORT void JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Body_1setGtavityScale(
+        JNIEnv* env,
+        jobject obj,
+        jlong bodyPtr,
+        jfloat scale){
+
+    b2Body* pBody = (b2Body*)bodyPtr;
+    pBody->SetGravityScale((float32)scale);
+}
+
+JNIEXPORT jfloat JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Body_1getGravityScale(
+        JNIEnv* env,
+        jobject obj,
+        jlong bodyPtr){
+
+    b2Body* pBody = (b2Body*)bodyPtr;
+    return (jfloat)pBody->GetGravityScale();
+}
+
+
 #ifdef __cplusplus
 }
 #endif

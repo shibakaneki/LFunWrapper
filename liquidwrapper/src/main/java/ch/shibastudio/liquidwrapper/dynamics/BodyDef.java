@@ -38,6 +38,15 @@ public class BodyDef extends AbstractNativeObject {
 	}
 
 	/**
+	 * Sets the position.
+	 * @param x as the X coordinate.
+	 * @param y as the Y coordinate.
+	 */
+	public void setPosition(float x, float y){
+		LiquidWrapperJNI.BodyDef_setPosition(super.getPtr(), new Vec2(x, y).getPtr());
+	}
+
+	/**
 	 * Gets the position.
 	 * @return the position.
 	 */

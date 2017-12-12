@@ -2,6 +2,8 @@ package ch.shibastudio.liquidwrapper.dynamics;
 
 import ch.shibastudio.liquidwrapper.AbstractNativeObject;
 import ch.shibastudio.liquidwrapper.LiquidWrapperJNI;
+import ch.shibastudio.liquidwrapper.particle.ParticleSystem;
+import ch.shibastudio.liquidwrapper.particle.ParticleSystemDef;
 
 /**
  * Created by shibakaneki on 27.11.17.
@@ -45,5 +47,14 @@ public class World extends AbstractNativeObject{
 	 */
 	public Body createBody(BodyDef bodyDef){
 		return new Body(LiquidWrapperJNI.World_createBody(super.getPtr(), bodyDef.getPtr()));
+	}
+
+	/**
+	 * Creates a particle system.
+	 * @param particleSystemDef as the particle system definition.
+	 * @return the created particle system.
+	 */
+	public ParticleSystem createParticleSystem(ParticleSystemDef particleSystemDef){
+		return new ParticleSystem(LiquidWrapperJNI.World_createParticleSystem(super.getPtr(), particleSystemDef.getPtr()));
 	}
 }

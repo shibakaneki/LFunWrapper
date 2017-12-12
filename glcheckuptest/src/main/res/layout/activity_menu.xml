@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/glButton"
+        android:layout_height="48dp"
+        android:layout_width="200dp"
+        android:background="@color/colorAccent"
+        android:textColor="@android:color/white"
+        android:text="@string/menu_button_gl"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"/>
+
+    <Button
+        android:id="@+id/textureButton"
+        android:layout_height="48dp"
+        android:layout_width="200dp"
+        android:background="@color/colorAccent"
+        android:textColor="@android:color/white"
+        android:text="@string/menu_button_texture"
+        android:layout_below="@+id/glButton"
+        android:layout_alignStart="@+id/glButton"
+        android:layout_marginTop="24dp"/>
+
+    <Button
+        android:id="@+id/textureTestButton"
+        android:layout_height="48dp"
+        android:layout_width="200dp"
+        android:background="@color/colorAccent"
+        android:textColor="@android:color/white"
+        android:text="@string/menu_button_texture_test"
+        android:layout_marginTop="29dp"
+        android:layout_below="@+id/textureButton"
+        android:layout_alignStart="@+id/textureButton"/>
+
+</RelativeLayout>

@@ -52,6 +52,16 @@ public class Body extends AbstractNativeObject{
 	}
 
 	/**
+	 * Set the position of the body's origin and rotation.
+	 * @param x as X coordinate of the body origin position.
+	 * @param y as Y coordinate of the body origin position.
+	 * @param angle as the rotation angle.
+	 */
+	public void setTransform(float x, float y, float angle){
+		LiquidWrapperJNI.Body_setTransform(super.getPtr(), new Vec2(x, y).getPtr(), angle);
+	}
+
+	/**
 	 * Gets the position.
 	 * @return the position.
 	 */
@@ -84,5 +94,35 @@ public class Body extends AbstractNativeObject{
 		return pos.getY();
 	}
 
-	// TODO: Implement me!
+	/**
+	 * Sets the linear velocity.
+	 * @param velocity as the velocity.
+	 */
+	public void setLinearVelocity(Vec2 velocity){
+		LiquidWrapperJNI.Body_setLinearVelocity(super.getPtr(), velocity.getPtr());
+	}
+
+	/**
+	 * Sets the angular velocity.
+	 * @param velocity as the velocity.
+	 */
+	public void setAngularVelocity(float velocity){
+		LiquidWrapperJNI.Body_setAngularVelocity(super.getPtr(), velocity);
+	}
+
+	/**
+	 * Sets the gravity scale.
+	 * @param scale as the scale.
+	 */
+	public void setGravityScale(float scale){
+		LiquidWrapperJNI.Body_setGravityScale(super.getPtr(), scale);
+	}
+
+	/**
+	 * Gets the gravity scale.
+	 * @return the gravity scale.
+	 */
+	public float getGravityScale(){
+		return LiquidWrapperJNI.BodyDef_getGravityScale(super.getPtr());
+	}
 }

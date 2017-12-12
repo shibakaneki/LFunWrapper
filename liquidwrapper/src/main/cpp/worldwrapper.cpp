@@ -1,6 +1,7 @@
 #include <jni.h>
 #include "../../../libs/liquidfun/include/Box2D/Dynamics/b2World.h"
 #include "../../../libs/liquidfun/include/Box2D/Common/b2Math.h"
+#include "../../../libs/liquidfun/include/Box2D/Particle/b2ParticleSystem.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -68,6 +69,18 @@ JNIEXPORT jlong JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_World
     b2BodyDef* def = (b2BodyDef*)bodyDefPtr;
 
     return (jlong)world->CreateBody(def);
+}
+
+JNIEXPORT jlong JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_World_1createParticleSystem(
+        JNIEnv* env,
+        jobject obj,
+        jlong worldPtr,
+        jlong particleDefPtr){
+
+    b2World* world = (b2World*)worldPtr;
+    b2ParticleSystemDef* def = (b2ParticleSystemDef*)particleDefPtr;
+
+    return (jlong)world->CreateParticleSystem(def);
 }
 
 #ifdef __cplusplus

@@ -38,6 +38,15 @@ public class ParticleDef extends AbstractNativeObject{
 	}
 
 	/**
+	 * Sets the position.
+	 * @param x as the X coordinate.
+	 * @param y as the Y coordinate.
+	 */
+	public void setPosition(float x, float y){
+		LiquidWrapperJNI.ParticleDef_setPosition(super.getPtr(), new Vec2(x, y).getPtr());
+	}
+
+	/**
 	 * Gets the position.
 	 * @return the position.
 	 */
@@ -67,6 +76,17 @@ public class ParticleDef extends AbstractNativeObject{
 	 */
 	public void setColor(ParticleColor color){
 		LiquidWrapperJNI.ParticleDef_setColor(super.getPtr(), color.getPtr());
+	}
+
+	/**
+	 * Sets the color.
+	 * @param r as the red component.
+	 * @param g as the green component.
+	 * @param b as the blue component.
+	 * @param a as the alpha component.
+	 */
+	public void setColor(int r, int g, int b, int a){
+		LiquidWrapperJNI.ParticleDef_setColor(super.getPtr(), new ParticleColor(r, g, b, a).getPtr());
 	}
 
 	/**

@@ -1,5 +1,7 @@
 package ch.shibastudio.liquidwrapper;
 
+import java.nio.ByteBuffer;
+
 /**
  * Created by shibakaneki on 27.11.17.
  */
@@ -14,6 +16,7 @@ public class LiquidWrapperJNI {
 	public final static native void World_step2(long worldPtr, float timeStep, int velocityIterations, int positionIterations);
 	public final static native void World_step(long worldPtr, float timeStep, int velocityIterations, int positionIterations, int particleIterations);
 	public final static native long World_createBody(long worldPtr, long bodyDefPtr);
+	public final static native long World_createParticleSystem(long worldPtr, long particleSystemDefPtr);
 
 	// Vec2
 	public final static native long Vec2_new();
@@ -76,6 +79,10 @@ public class LiquidWrapperJNI {
 	public final static native long Body_getPosition(long bodyPtr);
 	public final static native float Body_getAngle(long bodyPtr);
 	public final static native void Body_setTransform(long bodyPtr, long posPtr, float angle);
+	public final static native void Body_setLinearVelocity(long bodyPtr, long velocityPtr);
+	public final static native void Body_setAngularVelocity(long bodyPtr, float velocity);
+	public final static native void Body_setGravityScale(long bodyPtr, float scale);
+	public final static native float Body_getGravityScale(long bodyPtr);
 
 	// FixtureDef
 	public final static native long FixtureDef_new();
@@ -117,6 +124,15 @@ public class LiquidWrapperJNI {
 	public final static native void PolygonShape_setAsBox(long pshapePtr, float x, float y);
 	public final static native void PolygonShape_setAsBox2(long pshapePtr, float x, float y, long centerPtr, float angle);
 	public final static native int PolygonShape_getVertexCount(long pshapePtr);
+
+	// CircleShape
+	public final static native long CircleShape_new();
+
+	// ChainShape
+	public final static native long ChainShape_new();
+
+	// EdgeShape
+	public final static native long EdgeShape_new();
 
 	// ParticleDef
 	public final static native long ParticleDef_new();
@@ -241,6 +257,23 @@ public class LiquidWrapperJNI {
 	public final static native void ParticleGroup_destroyParticles2(long particleGroupPtr);
 
 	// ParticleSystem
+	public final static native int ParticleSystem_createParticle(long particleSystemPtr, long particleDefPtr);
+	public final static native void ParticleSystem_destroyParticle(long particleSystemPtr, int particleIndex);
+	public final static native void ParticleSystem_getPositionBuffer(long particleSystemPtr, int startIndex, int particleCount, ByteBuffer outBuffer);
+	public final static native void ParticleSystem_getWeightBuffer(long particleSystemPtr, int startIndex, int particleCount, ByteBuffer outBuffer);
+	public final static native void ParticleSystem_getVelocityBuffer(long particleSystemPtr, int startIndex, int particleCount, ByteBuffer outBuffer);
+	public final static native void ParticleSystem_getColorBuffer(long particleSystemPtr, int startIndex, int particleCount, ByteBuffer outBuffer);
+	public final static native void ParticleSystem_getStuckCandidates(long particleSystemPtr, int startIndex, int particleCount, ByteBuffer outBuffer);
+	public final static native int ParticleSystem_getStuckCandidatesCount(long particleSystemPtr);
+	public final static native void ParticleSystem_setDestructionByAge(long particleSystemPtr, boolean isDestroyingByAge);
+	public final static native int ParticleSystem_getParticleCount(long particleSystemPtr);
+	public final static native int ParticleSystem_getParticleGroupCount(long particleSystemPtr);
+	public final static native long ParticleSystem_getParticleGroupList(long particleSystemPtr);
+	public final static native void ParticleSystem_setMaxParticleCount(long particleSystemPtr, int maxCount);
+	public final static native int ParticleSystem_getMaxParticleCount(long particleSystemPtr);
+	public final static native long ParticleSystem_createParticleGroup(long particleSystemPtr, long particleGroupDefPtr);
+
+
 
 
 }
