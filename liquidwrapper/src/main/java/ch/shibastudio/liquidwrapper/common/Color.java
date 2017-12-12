@@ -12,6 +12,14 @@ public class Color extends AbstractNativeObject {
 		super(LiquidWrapperJNI.Color_new(r, g, b));
 	}
 
+	@Override
+	public synchronized void delete(){
+		if (super.getPtr() != 0) {
+			LiquidWrapperJNI.Color_delete(super.getPtr());
+			super.deletePtr();
+		}
+	}
+
 	/**
 	 * Sets the color components.
 	 * @param red as the red component.

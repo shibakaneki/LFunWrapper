@@ -21,6 +21,14 @@ public class ParticleColor extends AbstractNativeObject {
 		super(LiquidWrapperJNI.ParticleColor_new2(r, g, b, a));
 	}
 
+	@Override
+	public synchronized void delete(){
+		if (super.getPtr() != 0) {
+			LiquidWrapperJNI.ParticleColor_delete(super.getPtr());
+			super.deletePtr();
+		}
+	}
+
 	/**
 	 * Gets an information whether it is zero.
 	 * @return true if zero; otherwise false.

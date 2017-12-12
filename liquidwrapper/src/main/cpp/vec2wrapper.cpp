@@ -21,6 +21,15 @@ JNIEXPORT jlong JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Vec2_
     return (jlong)new b2Vec2((float)x, (float)y);
 }
 
+JNIEXPORT void JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Vec2_1delete(
+        JNIEnv* env,
+        jobject obj,
+        jlong ptr){
+
+    b2Vec2* pVec2 = (b2Vec2*)ptr;
+    delete pVec2;
+}
+
 JNIEXPORT void JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Vec2_1setZero(
         JNIEnv* env,
         jobject obj,

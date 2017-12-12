@@ -22,6 +22,7 @@ public class LiquidWrapperJNI {
 	// Vec2
 	public final static native long Vec2_new();
 	public final static native long Vec2_new2(float x, float y);
+	public final static native void Vec2_delete(long vec2Ptr);
 	public final static native void Vec2_setZero(long vec2Ptr);
 	public final static native void Vec2_set(long vec2Ptr, float x, float y);
 	public final static native float Vec2_length(long vec2Ptr);
@@ -36,6 +37,7 @@ public class LiquidWrapperJNI {
 
 	// Color
 	public final static native long Color_new(float r, float g, float b);
+	public final static native void Color_delete(long colorPtr);
 	public final static native void Color_set(long colorPtr, float r, float g, float b);
 	public final static native void Color_setRed(long colorPtr, float r);
 	public final static native float Color_getRed(long colorPtr);
@@ -46,6 +48,7 @@ public class LiquidWrapperJNI {
 
 	// BodyDef
 	public final static native long BodyDef_new();
+	public final static native void BodyDef_delete(long bodyDefPtr);
 	public final static native void BodyDef_setType(long bodyDefPtr, int type);
 	public final static native int BodyDef_getType(long bodyDefPtr);
 	public final static native void BodyDef_setAngle(long bodyDefPtr, float angle);
@@ -87,6 +90,7 @@ public class LiquidWrapperJNI {
 
 	// FixtureDef
 	public final static native long FixtureDef_new();
+	public final static native void FixtureDef_delete(long fixtureDefPtr);
 	public final static native void FixtureDef_setShape(long fixtureDefPtr, long shapePtr);
 	public final static native long FixtureDef_getShape(long fixtureDefPtr);
 	public final static native void FixtureDef_setFriction(long fixtureDefPtr, float friction);
@@ -99,6 +103,7 @@ public class LiquidWrapperJNI {
 	public final static native boolean FixtureDef_isSensor(long fixtureDefPtr);
 
 	// Fixture
+	public final static native void Fixture_delete(long fixturePtr);
 	public final static native int Fixture_getType(long fixturePtr);
 	public final static native long Fixture_getShape(long fixturePtr);
 	public final static native void Fixture_setSensor(long fixturePtr, boolean isSensor);
@@ -121,6 +126,7 @@ public class LiquidWrapperJNI {
 
 	// PolygonShape
 	public final static native long PolygonShape_new();
+	public final static native void PolygonShape_delete(long pshapePtr);
 	public final static native void PolygonShape_set(long pshapePtr, long pointsPtr, int count);
 	public final static native void PolygonShape_setAsBox(long pshapePtr, float x, float y);
 	public final static native void PolygonShape_setAsBox2(long pshapePtr, float x, float y, long centerPtr, float angle);
@@ -128,15 +134,19 @@ public class LiquidWrapperJNI {
 
 	// CircleShape
 	public final static native long CircleShape_new();
+	public final static native void CircleShape_delete(long circleShapePtr);
 
 	// ChainShape
 	public final static native long ChainShape_new();
+	public final static native void ChainShape_delete(long chainShapePtr);
 
 	// EdgeShape
 	public final static native long EdgeShape_new();
+	public final static native void EdgeShape_delete(long edgeShapePtr);
 
 	// ParticleDef
 	public final static native long ParticleDef_new();
+	public final static native void ParticleDef_delete(long particleDefPtr);
 	public final static native void ParticleDef_setFlags(long particleDefPtr, int flag);
 	public final static native int ParticleDef_getFlags(long particleDefPtr);
 	public final static native void ParticleDef_setPosition(long particleDefPtr, long positionPtr);
@@ -153,11 +163,13 @@ public class LiquidWrapperJNI {
 	// ParticleColor
 	public final static native long ParticleColor_new();
 	public final static native long ParticleColor_new2(int r, int g, int b, int a);
+	public final static native void ParticleColor_delete(long particleColorPtr);
 	public final static native boolean ParticleColor_isZero(long particleColorPtr);
 	public final static native void ParticleColor_set(long particleColorPtr, int r, int g, int b, int a);
 
 	// ParticleSystemDef
 	public final static native long ParticleSystemDef_new();
+	public final static native void ParticleSystemDef_delete(long particleSystemDefPtr);
 	public final static native void ParticleSystemDef_setDensity(long particleSystemDefPtr, float density);
 	public final static native float ParticleSystemDef_getDensity(long particleSystemDefPtr);
 	public final static native void ParticleSystemDef_setGravityScale(long particleSystemDefPtr, float gravityScale);
@@ -201,6 +213,7 @@ public class LiquidWrapperJNI {
 
 	// ParticleGroupDef
 	public final static native long ParticleGroupDef_new();
+	public final static native void ParticleGroupDef_delete(long particleGroupDefPtr);
 	public final static native void ParticleGroupDef_setFlags(long particleGroupDefPtr, int flags);
 	public final static native int ParticleGroupDef_getFlags(long particleGroupDefPtr);
 	public final static native void ParticleGroupDef_setGroupFlags(long particleGroupDefPtr, int flags);
@@ -274,6 +287,9 @@ public class LiquidWrapperJNI {
 	public final static native int ParticleSystem_getMaxParticleCount(long particleSystemPtr);
 	public final static native long ParticleSystem_createParticleGroup(long particleSystemPtr, long particleGroupDefPtr);
 
+	// Transform
+	public final static native long Transform_new();
+	public final static native void Transform_delete(long transformPtr);
 
 
 

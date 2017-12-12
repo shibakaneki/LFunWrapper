@@ -12,6 +12,15 @@ JNIEXPORT jlong JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Fixtu
     return (jlong)new b2FixtureDef;
 }
 
+JNIEXPORT void JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_FixtureDef_1delete(
+        JNIEnv* env,
+        jobject obj,
+        jlong ptr){
+
+    b2FixtureDef* pFixtureDef = (b2FixtureDef*)ptr;
+    delete pFixtureDef;
+}
+
 JNIEXPORT void JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_FixtureDef_1setShape(
         JNIEnv* env,
         jobject obj,

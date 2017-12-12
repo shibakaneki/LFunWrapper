@@ -12,6 +12,15 @@ JNIEXPORT jlong JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Polyg
     return (jlong)new b2PolygonShape();
 }
 
+JNIEXPORT void JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_PolygonShape_1delete(
+        JNIEnv* env,
+        jobject obj,
+        jlong ptr){
+
+    b2PolygonShape* pPolygonShape = (b2PolygonShape*)ptr;
+    delete pPolygonShape;
+}
+
 JNIEXPORT void JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_PolygonShape_1set(
         JNIEnv* env,
         jobject obj,

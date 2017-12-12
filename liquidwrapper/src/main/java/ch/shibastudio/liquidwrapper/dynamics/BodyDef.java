@@ -13,6 +13,14 @@ public class BodyDef extends AbstractNativeObject {
 		super(LiquidWrapperJNI.BodyDef_new());
 	}
 
+	@Override
+	public synchronized void delete(){
+		if (super.getPtr() != 0) {
+			LiquidWrapperJNI.BodyDef_delete(super.getPtr());
+			super.deletePtr();
+		}
+	}
+
 	/**
 	 * Sets the body type.
 	 * @param type as the body type.

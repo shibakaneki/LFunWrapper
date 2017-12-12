@@ -14,4 +14,12 @@ public class CircleShape extends Shape {
 	public CircleShape(long ptr){
 		super(ptr);
 	}
+
+	@Override
+	public synchronized void delete(){
+		if (super.getPtr() != 0) {
+			LiquidWrapperJNI.CircleShape_delete(super.getPtr());
+			super.deletePtr();
+		}
+	}
 }

@@ -14,6 +14,15 @@ JNIEXPORT jlong JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Color
     return (jlong)new b2Color((float)r, (float)g, (float)b);
 }
 
+JNIEXPORT void JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Color_1delete(
+        JNIEnv* env,
+        jobject obj,
+        jlong ptr){
+
+    b2Color* pColor = (b2Color*)ptr;
+    delete pColor;
+}
+
 JNIEXPORT void JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Color_1set(
         JNIEnv *env,
         jobject obj,

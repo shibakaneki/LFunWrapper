@@ -20,6 +20,14 @@ public class World extends AbstractNativeObject{
 		super(LiquidWrapperJNI.World_new(gravityX, gravityY));
 	}
 
+	@Override
+	public synchronized void delete(){
+		if (super.getPtr() != 0) {
+			LiquidWrapperJNI.World_delete(super.getPtr());
+			super.deletePtr();
+		}
+	}
+
 	/**
 	 * Take a time step.
 	 * @param timeStep as the time step.

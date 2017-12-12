@@ -12,6 +12,14 @@ public class ParticleSystemDef extends AbstractNativeObject {
 		super(LiquidWrapperJNI.ParticleSystemDef_new());
 	}
 
+	@Override
+	public synchronized void delete(){
+		if (super.getPtr() != 0) {
+			LiquidWrapperJNI.ParticleSystemDef_delete(super.getPtr());
+			super.deletePtr();
+		}
+	}
+
 	/**
 	 * Sets the particles density.
 	 * @param density as the particles density.

@@ -22,6 +22,15 @@ JNIEXPORT jlong JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Parti
     return (jlong)new b2ParticleColor((uint8)r, (uint8)g, (uint8)b, (uint8)a);
 }
 
+JNIEXPORT void JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_ParticleColor_1delete(
+        JNIEnv* env,
+        jobject obj,
+        jlong ptr){
+
+    b2ParticleColor* pParticleColor = (b2ParticleColor*)ptr;
+    delete pParticleColor;
+}
+
 JNIEXPORT jboolean JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_ParticleColor_1isZero(
         JNIEnv *env,
         jobject obj,

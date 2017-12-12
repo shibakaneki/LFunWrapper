@@ -13,6 +13,15 @@ JNIEXPORT jlong JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_BodyD
     return (jlong)new b2BodyDef;
 }
 
+JNIEXPORT void JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_BodyDef_1delete(
+        JNIEnv* env,
+        jobject obj,
+        jlong ptr){
+
+    b2BodyDef* pBodyDef = (b2BodyDef*)ptr;
+    delete pBodyDef;
+}
+
 JNIEXPORT void JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_BodyDef_1setType(
         JNIEnv* env,
         jobject obj,

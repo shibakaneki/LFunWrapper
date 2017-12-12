@@ -15,6 +15,11 @@ public class ParticleGroup extends AbstractNativeObject{
 		super(ptr);
 	}
 
+	@Override
+	public synchronized void delete(){
+		// Its destructor is private so the world is responsible to destroy it.
+	}
+
 	/**
 	 * Gets the next particle group.
 	 * @return the next particle group.

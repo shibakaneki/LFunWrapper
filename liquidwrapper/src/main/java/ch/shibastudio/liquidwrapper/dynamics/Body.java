@@ -15,6 +15,11 @@ public class Body extends AbstractNativeObject{
 		super(ptr);
 	}
 
+	@Override
+	public synchronized void delete(){
+		// Its destructor is private so the world is responsible to destroy it.
+	}
+
 	/**
 	 * Creates a fixture.
 	 * @param fixtureDef as the fixture definition.

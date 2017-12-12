@@ -15,6 +15,11 @@ public class ParticleSystem extends AbstractNativeObject{
 		super(ptr);
 	}
 
+	@Override
+	public synchronized void delete(){
+		// Its destructor is private so the world is responsible to destroy it.
+	}
+
 	/**
 	 * Creates a particle.
 	 * @param particleDef as the particle definition.

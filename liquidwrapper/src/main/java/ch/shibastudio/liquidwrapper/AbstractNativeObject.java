@@ -1,5 +1,7 @@
 package ch.shibastudio.liquidwrapper;
 
+import android.util.Log;
+
 /**
  * Created by shibakaneki on 04.12.17.
  */
@@ -21,12 +23,15 @@ public abstract class AbstractNativeObject {
 	/**
 	 * Deletes the object.
 	 */
-	public synchronized void delete() {
+	public abstract void delete();
+/*	public synchronized void delete() {
 		if (this.cPtr != 0) {
+			Log.d("LIQUIDWRAPPER", "Deleting the pointer of " +this.getClass().getSimpleName());
 			LiquidWrapperJNI.delete(this.cPtr);
 			this.cPtr = 0;
 		}
 	}
+*/
 
 	/**
 	 * Gets the pointer to the object.
@@ -34,5 +39,12 @@ public abstract class AbstractNativeObject {
 	 */
 	public long getPtr(){
 		return this.cPtr;
+	}
+
+	/**
+	 * Deletes the C pointer.
+	 */
+	protected void deletePtr(){
+		this.cPtr = 0;
 	}
 }

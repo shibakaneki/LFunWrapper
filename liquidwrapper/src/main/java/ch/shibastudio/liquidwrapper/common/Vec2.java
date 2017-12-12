@@ -20,6 +20,14 @@ public class Vec2 extends AbstractNativeObject{
 		super(LiquidWrapperJNI.Vec2_new2(x, y));
 	}
 
+	@Override
+	public synchronized void delete(){
+		if (super.getPtr() != 0) {
+			LiquidWrapperJNI.Vec2_delete(super.getPtr());
+			super.deletePtr();
+		}
+	}
+
 	/**
 	 * Sets this vector to all zeros.
 	 */

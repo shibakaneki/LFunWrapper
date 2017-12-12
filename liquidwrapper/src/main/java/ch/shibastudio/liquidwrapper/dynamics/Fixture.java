@@ -19,6 +19,14 @@ public class Fixture extends AbstractNativeObject{
 		super(ptr);
 	}
 
+	@Override
+	public synchronized void delete(){
+		if (super.getPtr() != 0) {
+			LiquidWrapperJNI.Fixture_delete(super.getPtr());
+			super.deletePtr();
+		}
+	}
+
 	/**
 	 * Gets the shape type.
 	 * @return the shape type.

@@ -16,6 +16,14 @@ public class PolygonShape extends Shape{
 		super(ptr);
 	}
 
+	@Override
+	public synchronized void delete(){
+		if (super.getPtr() != 0) {
+			LiquidWrapperJNI.PolygonShape_delete(super.getPtr());
+			super.deletePtr();
+		}
+	}
+
 	/**
 	 * Sets the polygon points.
 	 * @param points as the list of coordinates.

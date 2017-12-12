@@ -12,6 +12,15 @@ JNIEXPORT jlong JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_EdgeS
     return (jlong)new b2EdgeShape();
 }
 
+JNIEXPORT void JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_EdgeShape_1delete(
+        JNIEnv* env,
+        jobject obj,
+        jlong ptr){
+
+    b2EdgeShape* pEdgeShape = (b2EdgeShape*)ptr;
+    delete pEdgeShape;
+}
+
 #ifdef __cplusplus
 }
 #endif

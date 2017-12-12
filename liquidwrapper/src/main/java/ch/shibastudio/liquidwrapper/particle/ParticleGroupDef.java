@@ -23,6 +23,14 @@ public class ParticleGroupDef extends AbstractNativeObject {
 		super(ptr);
 	}
 
+	@Override
+	public synchronized void delete(){
+		if (super.getPtr() != 0) {
+			LiquidWrapperJNI.ParticleGroupDef_delete(super.getPtr());
+			super.deletePtr();
+		}
+	}
+
 	/**
 	 * Sets the flags.
 	 * @param flags as the flags

@@ -13,6 +13,14 @@ public class ParticleDef extends AbstractNativeObject{
 		super(LiquidWrapperJNI.ParticleDef_new());
 	}
 
+	@Override
+	public synchronized void delete(){
+		if (super.getPtr() != 0) {
+			LiquidWrapperJNI.ParticleDef_delete(super.getPtr());
+			super.deletePtr();
+		}
+	}
+
 	/**
 	 * Sets the flags
 	 * @param flags as the given flags (a combination of ParticleFlags)

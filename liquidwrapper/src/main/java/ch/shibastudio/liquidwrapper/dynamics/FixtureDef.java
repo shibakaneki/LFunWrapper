@@ -19,6 +19,14 @@ public class FixtureDef extends AbstractNativeObject{
 		super(LiquidWrapperJNI.FixtureDef_new());
 	}
 
+	@Override
+	public synchronized void delete(){
+		if (super.getPtr() != 0) {
+			LiquidWrapperJNI.FixtureDef_delete(super.getPtr());
+			super.deletePtr();
+		}
+	}
+
 	/**
 	 * Sets the shape.
 	 * @param shape as the shape.

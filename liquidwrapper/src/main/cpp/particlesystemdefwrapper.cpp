@@ -11,6 +11,15 @@ JNIEXPORT jlong JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Parti
     return (jlong)new b2ParticleSystemDef();
 }
 
+JNIEXPORT void JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_ParticleSystemDef_1delete(
+        JNIEnv* env,
+        jobject obj,
+        jlong ptr){
+
+    b2ParticleSystemDef* pParticleSystemDef = (b2ParticleSystemDef*)ptr;
+    delete pParticleSystemDef;
+}
+
 JNIEXPORT void JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_ParticleSystemDef_1setDensity(
         JNIEnv *env,
         jobject obj,
