@@ -83,6 +83,17 @@ JNIEXPORT jlong JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_World
     return (jlong)world->CreateParticleSystem(def);
 }
 
+JNIEXPORT jlong JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_World_1getGravity(
+        JNIEnv* env,
+        jobject obj,
+        jlong worldPtr){
+
+    b2World* world = (b2World*)worldPtr;
+    b2Vec2 gravity = world->GetGravity();
+    b2Vec2* pGravity = new b2Vec2(gravity.x, gravity.y);
+    return (jlong)pGravity;
+}
+
 #ifdef __cplusplus
 }
 #endif

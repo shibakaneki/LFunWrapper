@@ -17,6 +17,7 @@ public class LiquidWrapperJNI {
 	public final static native void World_step(long worldPtr, float timeStep, int velocityIterations, int positionIterations, int particleIterations);
 	public final static native long World_createBody(long worldPtr, long bodyDefPtr);
 	public final static native long World_createParticleSystem(long worldPtr, long particleSystemDefPtr);
+	public final static native long World_getGravity(long worldPtr);
 
 	// Vec2
 	public final static native long Vec2_new();

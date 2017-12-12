@@ -59,10 +59,12 @@ JNIEXPORT jlong JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Body_
         jlong bodyPtr){
 
     b2Body* pBody = (b2Body*)bodyPtr;
-    return (jlong)&pBody->GetPosition();
+    b2Vec2 position = pBody->GetPosition();
+    b2Vec2* pPosition = new b2Vec2(position.x, position.y);
+    return (jlong)pPosition;
 }
 
-JNIEXPORT jlong JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Body_1getAngle(
+JNIEXPORT jfloat JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Body_1getAngle(
         JNIEnv* env,
         jobject obj,
         jlong bodyPtr){
@@ -92,7 +94,7 @@ JNIEXPORT void JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Body_1
     pBody->SetAngularVelocity((float32)velocity);
 }
 
-JNIEXPORT void JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Body_1setGtavityScale(
+JNIEXPORT void JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Body_1setGravityScale(
         JNIEnv* env,
         jobject obj,
         jlong bodyPtr,

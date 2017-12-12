@@ -135,6 +135,7 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 	@Override
 	public void initRendering() {
 		this.world = new World(0f, -WORLD_TOP);
+
 		this.liquidShaderProgram = new LiquidShaderProgram(this.context);
 		this.liquidEntity = new LiquidEntity(MAX_PARTICLES);
 

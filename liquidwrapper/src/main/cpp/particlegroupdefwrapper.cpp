@@ -70,7 +70,8 @@ JNIEXPORT jlong JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Parti
         jlong particleGroupDefPtr){
 
     b2ParticleGroupDef* pPartGroupDef = (b2ParticleGroupDef*)particleGroupDefPtr;
-    return (jlong)&pPartGroupDef->position;
+    b2Vec2 position = pPartGroupDef->position;
+    return (jlong)new b2Vec2(position.x, position.y);
 }
 
 JNIEXPORT void JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_ParticleGroupDef_1setAngle(
@@ -109,7 +110,8 @@ JNIEXPORT jlong JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Parti
         jlong particleGroupDefPtr){
 
     b2ParticleGroupDef* pPartGroupDef = (b2ParticleGroupDef*)particleGroupDefPtr;
-    return (jlong)&pPartGroupDef->linearVelocity;
+    b2Vec2 velocity = pPartGroupDef->linearVelocity;
+    return (jlong)new b2Vec2(velocity.x, velocity.y);
 }
 
 JNIEXPORT void JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_ParticleGroupDef_1setAngularVelocity(
@@ -148,7 +150,7 @@ JNIEXPORT jlong JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Parti
         jlong particleGroupDefPtr){
 
     b2ParticleGroupDef* pPartGroupDef = (b2ParticleGroupDef*)particleGroupDefPtr;
-    return (jlong)&pPartGroupDef->color;
+    return (jlong)new b2ParticleColor(pPartGroupDef->color);
 }
 
 JNIEXPORT void JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_ParticleGroupDef_1setStrength(
@@ -187,7 +189,7 @@ JNIEXPORT jlong JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Parti
         jlong particleGroupDefPtr){
 
     b2ParticleGroupDef* pPartGroupDef = (b2ParticleGroupDef*)particleGroupDefPtr;
-    return (jlong)&pPartGroupDef->shape;
+    return (jlong)pPartGroupDef->shape;
 }
 
 JNIEXPORT void JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_ParticleGroupDef_1setShapes(
@@ -207,7 +209,7 @@ JNIEXPORT jlong JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Parti
         jlong particleGroupDefPtr){
 
     b2ParticleGroupDef* pPartGroupDef = (b2ParticleGroupDef*)particleGroupDefPtr;
-    return (jlong)*pPartGroupDef->shapes;
+    return (jlong)pPartGroupDef->shapes;
 }
 
 JNIEXPORT void JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_ParticleGroupDef_1setShapeCount(

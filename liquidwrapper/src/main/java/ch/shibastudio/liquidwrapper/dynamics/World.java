@@ -2,6 +2,7 @@ package ch.shibastudio.liquidwrapper.dynamics;
 
 import ch.shibastudio.liquidwrapper.AbstractNativeObject;
 import ch.shibastudio.liquidwrapper.LiquidWrapperJNI;
+import ch.shibastudio.liquidwrapper.common.Vec2;
 import ch.shibastudio.liquidwrapper.particle.ParticleSystem;
 import ch.shibastudio.liquidwrapper.particle.ParticleSystemDef;
 
@@ -56,5 +57,13 @@ public class World extends AbstractNativeObject{
 	 */
 	public ParticleSystem createParticleSystem(ParticleSystemDef particleSystemDef){
 		return new ParticleSystem(LiquidWrapperJNI.World_createParticleSystem(super.getPtr(), particleSystemDef.getPtr()));
+	}
+
+	/**
+	 * Gets the gravity vector.
+	 * @return the gravity vector.
+	 */
+	public Vec2 getGravityVector(){
+		return new Vec2(LiquidWrapperJNI.World_getGravity(super.getPtr()));
 	}
 }

@@ -105,7 +105,7 @@ JNIEXPORT jlong JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Parti
 
     b2ParticleGroup* pGroup = (b2ParticleGroup*)particleGroupPtr;
     b2Vec2 center = pGroup->GetCenter();
-    return (jlong)&center;
+    return (jlong)new b2Vec2(center.x, center.y);
 }
 
 JNIEXPORT jlong JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_ParticleGroup_1getLinearVelocity(
@@ -115,7 +115,7 @@ JNIEXPORT jlong JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Parti
 
     b2ParticleGroup* pGroup = (b2ParticleGroup*)particleGroupPtr;
     b2Vec2 velocity = pGroup->GetLinearVelocity();
-    return (jlong)&velocity;
+    return (jlong)new b2Vec2(velocity.x, velocity.y);
 }
 
 JNIEXPORT jfloat JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_ParticleGroup_1getAngularVelocity(
@@ -134,7 +134,7 @@ JNIEXPORT jlong JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Parti
 
     b2ParticleGroup* pGroup = (b2ParticleGroup*)particleGroupPtr;
     b2Transform transform = pGroup->GetTransform();
-    return (jlong)&transform;
+    return (jlong)new b2Transform(transform.p, transform.q);
 }
 
 JNIEXPORT jlong JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_ParticleGroup_1getPosition(
@@ -144,7 +144,7 @@ JNIEXPORT jlong JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Parti
 
     b2ParticleGroup* pGroup = (b2ParticleGroup*)particleGroupPtr;
     b2Vec2 position = pGroup->GetPosition();
-    return (jlong)&position;
+    return (jlong)new b2Vec2(position.x, position.y);
 }
 
 JNIEXPORT jfloat JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_ParticleGroup_1getAngle(
@@ -165,7 +165,7 @@ JNIEXPORT jlong JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Parti
     b2ParticleGroup* pGroup = (b2ParticleGroup*)particleGroupPtr;
     b2Vec2* pWorldPoint = (b2Vec2*)worldPointPtr;
     b2Vec2 velocity = pGroup->GetLinearVelocityFromWorldPoint(*pWorldPoint);
-    return (jlong)&velocity;
+    return (jlong)new b2Vec2(velocity.x, velocity.y);
 }
 
 JNIEXPORT void JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_ParticleGroup_1applyForce(

@@ -50,7 +50,8 @@ JNIEXPORT jlong JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Parti
         jlong particleDefPtr){
 
     b2ParticleDef* pPdef = (b2ParticleDef*)particleDefPtr;
-    return (jlong)&pPdef->position;
+    b2Vec2 position = pPdef->position;
+    return (jlong)new b2Vec2(position.x, position.y);
 }
 
 JNIEXPORT void JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_ParticleDef_1setVelocity(
@@ -70,7 +71,8 @@ JNIEXPORT jlong JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Parti
         jlong particleDefPtr){
 
     b2ParticleDef* pPdef = (b2ParticleDef*)particleDefPtr;
-    return (jlong)&pPdef->velocity;
+    b2Vec2 velocity = pPdef->velocity;
+    return (jlong)new b2Vec2(velocity.x, velocity.y);
 }
 
 JNIEXPORT void JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_ParticleDef_1setColor(
@@ -90,7 +92,8 @@ JNIEXPORT jlong JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Parti
         jlong particleDefPtr){
 
     b2ParticleDef* pPdef = (b2ParticleDef*)particleDefPtr;
-    return (jlong)&pPdef->color;
+    b2ParticleColor color = pPdef->color;
+    return (jlong)new b2ParticleColor(color);
 }
 
 JNIEXPORT void JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_ParticleDef_1setLifetime(
@@ -129,7 +132,7 @@ JNIEXPORT jlong JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Parti
         jlong particleDefPtr){
 
     b2ParticleDef* pPdef = (b2ParticleDef*)particleDefPtr;
-    return (jlong)&pPdef->group;
+    return (jlong)pPdef->group;
 }
 
 #ifdef __cplusplus
