@@ -83,6 +83,7 @@ public class Vec2 extends AbstractNativeObject{
 	 */
 	public Vec2 skew(){
 		long skewedVecPtr = LiquidWrapperJNI.Vec2_skew(super.getPtr());
+		Vec2 skewedVec = new Vec2(skewedVecPtr);
 		return new Vec2(skewedVecPtr);
 	}
 

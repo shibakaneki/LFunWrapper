@@ -52,6 +52,8 @@ import static ch.shibastudio.glcheckuptest.CheckupConstants.PARTICLE_SIZE_WORLD;
 public class CheckupTextureRenderer extends AbstractTextureRenderer {
 	private final static long TARGET_BLINK = 500;
 
+	private final static boolean USE_LIQUID = true;
+
 	private final static float WORLD_TOP = 10f;
 	private final static float WORLD_BOTTOM = 0f;
 	private final static float WORLD_HEIGHT = WORLD_TOP - WORLD_BOTTOM;
@@ -136,8 +138,10 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 	public void initRendering() {
 		this.world = new World(0f, -WORLD_TOP);
 
-		this.liquidShaderProgram = new LiquidShaderProgram(this.context);
-		this.liquidEntity = new LiquidEntity(MAX_PARTICLES);
+		if(USE_LIQUID){
+			this.liquidShaderProgram = new LiquidShaderProgram(this.context);
+			this.liquidEntity = new LiquidEntity(MAX_PARTICLES);
+		}
 
 		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		glViewport(0, 0, super.getWidth(), super.getHeight());
@@ -162,7 +166,10 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 		this.createWalls();
 		this.createGround();
 		this.createJar();
-		this.createLiquid();
+
+		if(USE_LIQUID){
+			this.createLiquid();
+		}
 
 		Matrix.setLookAtM(this.viewMatrix, 0, 0, 0, 3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
 		Matrix.multiplyMM(this.modelViewProjectionMatrix, 0, this.projectionMatrix, 0, this.viewMatrix, 0);
@@ -199,8 +206,10 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 			this.world.step(TIME_STEP, VELOCITY_ITERATION, POSITION_ITERATION, PARTICLE_ITERATION);
 			this.updatePositions();
 
-			// Add random drops
-			this.addParticles();
+			if(USE_LIQUID){
+				// Add random drops
+				this.addParticles();
+			}
 		}
 
 		// Render
@@ -213,10 +222,12 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 			this.targetGuideRectEntity.setState(this.isInTarget);
 		}
 
-		this.liquidShaderProgram.useProgram();
-		this.liquidShaderProgram.setUniforms(this.viewProjectionMatrix2);
-		this.liquidEntity.bindData(this.liquidShaderProgram);
-		this.liquidEntity.draw();
+		if(USE_LIQUID){
+			this.liquidShaderProgram.useProgram();
+			this.liquidShaderProgram.setUniforms(this.viewProjectionMatrix2);
+			this.liquidEntity.bindData(this.liquidShaderProgram);
+			this.liquidEntity.draw();
+		}
 
 		this.wall1Entity.render(this.modelViewProjectionMatrix);
 		this.wall2Entity.render(this.modelViewProjectionMatrix);
@@ -229,6 +240,7 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 		//this.liquidJarRightEntity.render(this.modelViewProjectionMatrix);
 
 		this.inputPipeEntity.render(this.modelViewProjectionMatrix);
+
 	}
 
 	/**
@@ -431,12 +443,13 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 	 * @param body as the body related to the given entity.
 	 */
 	private void updateObjectPosition(AbstractEntity entity, Body body){
-		Vec2 pos = body.getPosition();
-		float angle = body.getAngle();
+		//Vec2 pos = body.getPosition();
+		//float angle = body.getAngle();
 
-		float entityCoords[] = this.convertToOpenGLCoordinates(new float[]{pos.getX(), pos.getY(), 0.0f});
+		float entityCoords[] = this.convertToOpenGLCoordinates(new float[]{body.getPositionX(), body.getPositionY(), 0.0f});
 		entity.setPosition(entityCoords[0], entityCoords[1]);
-		entity.setAngle((float)Math.toDegrees((angle)));
+		entity.setAngle((float)Math.toDegrees((body.getAngle())));
+
 	}
 
 	/**
@@ -482,10 +495,13 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 	private void updatePositions(){
 		this.groundLeftEntity.updateEntity(deltaYW);
 		this.groundRightEntity.updateEntity(deltaYW);
-		this.liquidParticleSystem.copyPositionBuffer(0, this.liquidEntity.getParticleCount(), posBuffer);
-		this.liquidParticleSystem.copyColorBuffer(0, this.liquidEntity.getParticleCount(), colorBuffer);
 
-		this.liquidEntity.updateParticles(posBuffer, colorBuffer);
+		if(USE_LIQUID){
+			this.liquidParticleSystem.copyPositionBuffer(0, this.liquidEntity.getParticleCount(), posBuffer);
+			this.liquidParticleSystem.copyColorBuffer(0, this.liquidEntity.getParticleCount(), colorBuffer);
+			this.liquidEntity.updateParticles(posBuffer, colorBuffer);
+		}
+
 	}
 
 	/**

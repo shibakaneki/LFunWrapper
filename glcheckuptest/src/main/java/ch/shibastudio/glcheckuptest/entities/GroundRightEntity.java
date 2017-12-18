@@ -111,7 +111,9 @@ public class GroundRightEntity extends AbstractBodyEntity {
 	 * @param worldWidth as the world width.
 	 */
 	public void updateEntity(float worldWidth){
-		float entityCoords[] = OpenGLUtils.convertToOpenGLCoordinates(new float[]{this.xW, this.yW, 0.0f}, worldWidth);
-		super.setPosition(entityCoords[0], entityCoords[1]);
+		super.coordinates[0] = this.xW;
+		super.coordinates[1] = this.yW;
+		OpenGLUtils.convertToOpenGLCoordinates(super.coordinates, worldWidth);
+		super.setPosition(super.coordinates[0], super.coordinates[1]);
 	}
 }

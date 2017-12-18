@@ -30,7 +30,7 @@ public class World extends AbstractNativeObject{
 
 	/**
 	 * Take a time step.
-	 * @param timeStep as the time step.
+	 * @param timeStep as the time step.¨
 	 * @param velocityIterations as the velocity iteration count.
 	 * @param positionIterations as the position iteration count.
 	 */

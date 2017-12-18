@@ -53,7 +53,7 @@ public class Body extends AbstractNativeObject{
 	 * @param angle as the rotation angle.
 	 */
 	public void setTransform(Vec2 position, float angle){
-		LiquidWrapperJNI.Body_setTransform(super.getPtr(), position.getPtr(), angle);
+		LiquidWrapperJNI.Body_setTransform2(super.getPtr(), position.getPtr(), angle);
 	}
 
 	/**
@@ -63,7 +63,7 @@ public class Body extends AbstractNativeObject{
 	 * @param angle as the rotation angle.
 	 */
 	public void setTransform(float x, float y, float angle){
-		LiquidWrapperJNI.Body_setTransform(super.getPtr(), new Vec2(x, y).getPtr(), angle);
+		LiquidWrapperJNI.Body_setTransform(super.getPtr(), x, y, angle);
 	}
 
 	/**
@@ -86,8 +86,7 @@ public class Body extends AbstractNativeObject{
 	 * @return the X coordinate.
 	 */
 	public float getPositionX(){
-		Vec2 pos = this.getPosition();
-		return pos.getX();
+		return LiquidWrapperJNI.Body_getPositionX(super.getPtr());
 	}
 
 	/**
@@ -95,8 +94,7 @@ public class Body extends AbstractNativeObject{
 	 * @return the Y coordinate.
 	 */
 	public float getPositionY(){
-		Vec2 pos = this.getPosition();
-		return pos.getY();
+		return LiquidWrapperJNI.Body_getPositionY(super.getPtr());
 	}
 
 	/**

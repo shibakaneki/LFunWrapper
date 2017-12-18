@@ -224,6 +224,17 @@ JNIEXPORT void JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_BodyDe
         JNIEnv* env,
         jobject obj,
         jlong bodyDefPtr,
+        jfloat x,
+        jfloat y){
+
+    b2BodyDef* pBodyDef = (b2BodyDef*)bodyDefPtr;
+    pBodyDef->SetPosition(x, y);
+}
+
+JNIEXPORT void JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_BodyDef_1setPosition2(
+        JNIEnv* env,
+        jobject obj,
+        jlong bodyDefPtr,
         jlong posPtr){
 
     b2BodyDef* pBodyDef = (b2BodyDef*)bodyDefPtr;

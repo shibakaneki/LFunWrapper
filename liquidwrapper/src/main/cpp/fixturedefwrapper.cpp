@@ -113,7 +113,7 @@ JNIEXPORT jboolean JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Fi
         jlong fdPtr){
 
     b2FixtureDef* pFixtureDef = (b2FixtureDef*)fdPtr;
-    return pFixtureDef->isSensor;
+    return (jboolean)pFixtureDef->isSensor;
 }
 
 #ifdef __cplusplus

@@ -24,14 +24,6 @@ public abstract class AbstractNativeObject {
 	 * Deletes the object.
 	 */
 	public abstract void delete();
-/*	public synchronized void delete() {
-		if (this.cPtr != 0) {
-			Log.d("LIQUIDWRAPPER", "Deleting the pointer of " +this.getClass().getSimpleName());
-			LiquidWrapperJNI.delete(this.cPtr);
-			this.cPtr = 0;
-		}
-	}
-*/
 
 	/**
 	 * Gets the pointer to the object.

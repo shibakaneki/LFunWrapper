@@ -114,11 +114,9 @@ public class TargetGuideRectEntity extends AbstractEntity {
 	}
 
 	public void render(float[] mvpMatrix){
-		float[] resultMatrix = mvpMatrix.clone();
+		super.updateTansformationMatrix();
 
-		super.updateTansformationMatrix(mvpMatrix);
-
-		multiplyMM(resultMatrix, 0, mvpMatrix, 0, super.transformationMatrix, 0);
+		multiplyMM(super.resultMatrix, 0, mvpMatrix, 0, super.transformationMatrix, 0);
 
 		glUseProgram(this.program);
 		this.positionHandle = glGetAttribLocation(this.program, "vPosition");
@@ -127,7 +125,7 @@ public class TargetGuideRectEntity extends AbstractEntity {
 
 		this.colorHandle = glGetUniformLocation(this.program, "vColor");
 		this.modelViewProjectionMatrixHandle = glGetUniformLocation(this.program, "uMVPMatrix");
-		glUniformMatrix4fv(this.modelViewProjectionMatrixHandle, 1, false, resultMatrix, 0);
+		glUniformMatrix4fv(this.modelViewProjectionMatrixHandle, 1, false, super.resultMatrix, 0);
 
 		if(this.isInTarget){
 			// Draw the background

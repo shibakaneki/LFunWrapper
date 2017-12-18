@@ -328,6 +328,9 @@ public class LiquidFunTestRenderer implements GLSurfaceView.Renderer {
 		float entityCoords[] = this.convertToOpenGLCoordinates(new float[]{pos.getX(), pos.getY(), 0.0f});
 		entity.setPosition(entityCoords[0], entityCoords[1]);
 		entity.setAngle((float)Math.toDegrees((angle)));
+
+
+		pos.delete();
 	}
 
 	/**

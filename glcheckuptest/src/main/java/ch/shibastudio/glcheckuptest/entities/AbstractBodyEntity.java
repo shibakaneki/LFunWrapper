@@ -13,6 +13,8 @@ public abstract class AbstractBodyEntity extends AbstractEntity {
 	protected Body body;
 	private boolean isActive;
 
+	protected float[] coordinates = new float[]{0.0f, 0.0f, 0.0f};
+
 	public AbstractBodyEntity(){
 		super();
 	}

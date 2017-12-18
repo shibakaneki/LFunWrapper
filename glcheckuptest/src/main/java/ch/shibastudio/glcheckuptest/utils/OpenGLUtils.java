@@ -30,16 +30,10 @@ public class OpenGLUtils {
 	 *
 	 * @param worldCoords as the given world coordinates (x, y, z).
 	 * @param wWorld      as the world width.
-	 * @return the opengl coordinates as an array of [x, y, z]
 	 */
-	public static float[] convertToOpenGLCoordinates(float[] worldCoords, float wWorld) {
-		float openglCoord[] = new float[3];
-
-		openglCoord[0] = getOpenGLDimension(worldCoords[0], wWorld);
-		openglCoord[1] = convertToOpenGLYCoordinate(worldCoords[1], wWorld);
-		openglCoord[2] = worldCoords[2];
-
-		return openglCoord;
+	public static void convertToOpenGLCoordinates(float[] worldCoords, float wWorld) {
+		worldCoords[0] = getOpenGLDimension(worldCoords[0], wWorld);
+		worldCoords[1] = convertToOpenGLYCoordinate(worldCoords[1], wWorld);
 	}
 
 	/**

@@ -13,9 +13,9 @@ JNIEXPORT jlong JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Body_
         jlong bodyPtr,
         jlong fixtureDefPtr){
 
-    b2Body* pBody = (b2Body*)bodyPtr;
+    b2Body* pBody = reinterpret_cast<b2Body*>(bodyPtr);
     b2FixtureDef* pFixtureDef = (b2FixtureDef*)fixtureDefPtr;
-    return (jlong)pBody->CreateFixture(pFixtureDef);
+    return reinterpret_cast<jlong>(pBody->CreateFixture(pFixtureDef));
 }
 
 JNIEXPORT void JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Body_1destroyFixture(
@@ -24,7 +24,7 @@ JNIEXPORT void JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Body_1
         jlong bodyPtr,
         jlong fixturePtr){
 
-    b2Body* pBody = (b2Body*)bodyPtr;
+    b2Body* pBody = reinterpret_cast<b2Body*>(bodyPtr);
     b2Fixture* pFixture = (b2Fixture*)fixturePtr;
     pBody->DestroyFixture(pFixture);
 }
@@ -33,10 +33,22 @@ JNIEXPORT void JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Body_1
         JNIEnv* env,
         jobject obj,
         jlong bodyPtr,
+        float x,
+        jfloat y,
+        jfloat angle){
+
+    b2Body* pBody = reinterpret_cast<b2Body*>(bodyPtr);
+    pBody->SetTransform((float32)x, (float32)y, angle);
+}
+
+JNIEXPORT void JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Body_1setTransform2(
+        JNIEnv* env,
+        jobject obj,
+        jlong bodyPtr,
         jlong posPtr,
         jfloat angle){
 
-    b2Body* pBody = (b2Body*)bodyPtr;
+    b2Body* pBody = reinterpret_cast<b2Body*>(bodyPtr);
     b2Vec2* pPos = (b2Vec2*)posPtr;
     pBody->SetTransform(*pPos, angle);
 }
@@ -48,9 +60,9 @@ JNIEXPORT jlong JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Body_
         jlong shapePtr,
         jfloat density){
 
-    b2Body* pBody = (b2Body*)bodyPtr;
+    b2Body* pBody = reinterpret_cast<b2Body*>(bodyPtr);
     b2Shape* pShape = (b2Shape*)shapePtr;
-    return (jlong)pBody->CreateFixture(pShape, (float)density);
+    return reinterpret_cast<jlong>(pBody->CreateFixture(pShape, (float)density));
 }
 
 JNIEXPORT jlong JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Body_1getPosition(
@@ -58,10 +70,10 @@ JNIEXPORT jlong JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Body_
         jobject obj,
         jlong bodyPtr){
 
-    b2Body* pBody = (b2Body*)bodyPtr;
-    b2Vec2 position = pBody->GetPosition();
+    b2Body* pBody = reinterpret_cast<b2Body*>(bodyPtr);
+    const b2Vec2& position = pBody->GetPosition();
     b2Vec2* pPosition = new b2Vec2(position.x, position.y);
-    return (jlong)pPosition;
+    return reinterpret_cast<jlong>(pPosition);
 }
 
 JNIEXPORT jfloat JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Body_1getAngle(
@@ -69,7 +81,7 @@ JNIEXPORT jfloat JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Body
         jobject obj,
         jlong bodyPtr){
 
-    b2Body* pBody = (b2Body*)bodyPtr;
+    b2Body* pBody = reinterpret_cast<b2Body*>(bodyPtr);
     return (jfloat)pBody->GetAngle();
 }
 
@@ -79,7 +91,7 @@ JNIEXPORT void JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Body_1
         jlong bodyPtr,
         jlong velocityPtr){
 
-    b2Body* pBody = (b2Body*)bodyPtr;
+    b2Body* pBody = reinterpret_cast<b2Body*>(bodyPtr);
     b2Vec2* pVelocity = (b2Vec2*)velocityPtr;
     pBody->SetLinearVelocity(*pVelocity);
 }
@@ -90,7 +102,7 @@ JNIEXPORT void JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Body_1
         jlong bodyPtr,
         jfloat velocity){
 
-    b2Body* pBody = (b2Body*)bodyPtr;
+    b2Body* pBody = reinterpret_cast<b2Body*>(bodyPtr);
     pBody->SetAngularVelocity((float32)velocity);
 }
 
@@ -100,7 +112,7 @@ JNIEXPORT void JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Body_1
         jlong bodyPtr,
         jfloat scale){
 
-    b2Body* pBody = (b2Body*)bodyPtr;
+    b2Body* pBody = reinterpret_cast<b2Body*>(bodyPtr);
     pBody->SetGravityScale((float32)scale);
 }
 
@@ -109,10 +121,27 @@ JNIEXPORT jfloat JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Body
         jobject obj,
         jlong bodyPtr){
 
-    b2Body* pBody = (b2Body*)bodyPtr;
+    b2Body* pBody = reinterpret_cast<b2Body*>(bodyPtr);
     return (jfloat)pBody->GetGravityScale();
 }
 
+JNIEXPORT jfloat JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Body_1getPositionX(
+        JNIEnv* env,
+        jobject obj,
+        jlong bodyPtr){
+
+    b2Body* pBody = reinterpret_cast<b2Body*>(bodyPtr);
+    return (jfloat)pBody->GetPositionX();
+}
+
+JNIEXPORT jfloat JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Body_1getPositionY(
+        JNIEnv* env,
+        jobject obj,
+        jlong bodyPtr){
+
+    b2Body* pBody = reinterpret_cast<b2Body*>(bodyPtr);
+    return (jfloat)pBody->GetPositionY();
+}
 
 #ifdef __cplusplus
 }

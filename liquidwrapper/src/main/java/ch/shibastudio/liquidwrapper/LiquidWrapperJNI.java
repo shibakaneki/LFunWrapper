@@ -2,6 +2,8 @@ package ch.shibastudio.liquidwrapper;
 
 import java.nio.ByteBuffer;
 
+import ch.shibastudio.liquidwrapper.common.Vec2;
+
 /**
  * Created by shibakaneki on 27.11.17.
  */
@@ -71,7 +73,8 @@ public class LiquidWrapperJNI {
 	public final static native boolean BodyDef_getBullet(long bodyDefPtr);
 	public final static native void BodyDef_setActive(long bodyDefPtr, boolean isActive);
 	public final static native boolean BodyDef_getActive(long bodyDefPtr);
-	public final static native void BodyDef_setPosition(long bodyDefPtr, long vec2PosPtr);
+	public final static native void BodyDef_setPosition(long bodyDefPtr, float x, float y);
+	public final static native void BodyDef_setPosition2(long bodyDefPtr, long vec2PosPtr);
 	public final static native long BodyDef_getPosition(long bodyDefPtr);
 	public final static native void BodyDef_setLinearVelocity(long bodyDefPtr, long linearVelocityPtr);
 	public final static native long BodyDef_getLinearVelocity(long bodyDefPtr);
@@ -82,11 +85,15 @@ public class LiquidWrapperJNI {
 	public final static native void Body_destroyFixture(long bodyPtr, long fixturePtr);
 	public final static native long Body_getPosition(long bodyPtr);
 	public final static native float Body_getAngle(long bodyPtr);
-	public final static native void Body_setTransform(long bodyPtr, long posPtr, float angle);
+	public final static native void Body_setTransform(long bodyPtr, float x, float y, float angle);
+	public final static native void Body_setTransform2(long bodyPtr, long posPtr, float angle);
 	public final static native void Body_setLinearVelocity(long bodyPtr, long velocityPtr);
 	public final static native void Body_setAngularVelocity(long bodyPtr, float velocity);
 	public final static native void Body_setGravityScale(long bodyPtr, float scale);
 	public final static native float Body_getGravityScale(long bodyPtr);
+	public final static native float Body_getPositionX(long bodyPtr);
+	public final static native float Body_getPositionY(long bodyPtr);
+	public final static native float Body_getPosition2(long bodyPtr, Vec2 pos);
 
 	// FixtureDef
 	public final static native long FixtureDef_new();

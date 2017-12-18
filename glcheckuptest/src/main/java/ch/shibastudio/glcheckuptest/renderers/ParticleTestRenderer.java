@@ -261,10 +261,13 @@ public class ParticleTestRenderer implements GLSurfaceView.Renderer {
 	private void updateObjectPosition(AbstractEntity entity, Body body){
 		Vec2 pos = body.getPosition();
 		float angle = body.getAngle();
+		float[] coords = new float[]{pos.getX(), pos.getY(), 0.0f};
 
-		float entityCoords[] = OpenGLUtils.convertToOpenGLCoordinates(new float[]{pos.getX(), pos.getY(), 0.0f}, this.worldHeight);
-		entity.setPosition(entityCoords[0], entityCoords[1]);
+		OpenGLUtils.convertToOpenGLCoordinates(coords, this.worldHeight);
+		entity.setPosition(coords[0], coords[1]);
 		entity.setAngle((float)Math.toDegrees((angle)));
+
+		pos.delete();
 	}
 
 	/**

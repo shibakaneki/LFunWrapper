@@ -52,6 +52,7 @@ public abstract class AbstractEntity {
 	protected float scaleMatrix[] = new float[16];
 	protected float transformationMatrix[] = new float[16];
 	private float tempMatrix[] = new float[16];
+	protected float resultMatrix[] = new float[16];
 
 	private float x;
 	private float y;
@@ -171,11 +172,9 @@ public abstract class AbstractEntity {
 	 * Renders the entity. (should abstract this)
 	 */
 	public void render(float[] mvpMatrix){
-		float[] resultMatrix = mvpMatrix.clone();
+		this.updateTansformationMatrix();
 
-		this.updateTansformationMatrix(mvpMatrix);
-
-		Matrix.multiplyMM(resultMatrix, 0, mvpMatrix, 0, this.transformationMatrix, 0);
+		Matrix.multiplyMM(this.resultMatrix, 0, mvpMatrix, 0, this.transformationMatrix, 0);
 
 		GLES20.glUseProgram(this.program);
 		this.positionHandle = GLES20.glGetAttribLocation(this.program, "vPosition");
@@ -185,7 +184,7 @@ public abstract class AbstractEntity {
 		GLES20.glUniform4fv(this.colorHandle, 1, color, 0);
 
 		this.modelViewProjectionMatrixHandle = GLES20.glGetUniformLocation(this.program, "uMVPMatrix");
-		GLES20.glUniformMatrix4fv(this.modelViewProjectionMatrixHandle, 1, false, resultMatrix, 0);
+		GLES20.glUniformMatrix4fv(this.modelViewProjectionMatrixHandle, 1, false, this.resultMatrix, 0);
 		GLES20.glLineWidth(this.lineWidth);
 		GLES20.glDrawElements(this.drawingMode, drawOrder.length, GLES20.GL_UNSIGNED_SHORT, drawListBuffer);
 
@@ -195,7 +194,7 @@ public abstract class AbstractEntity {
 	/**
 	 * Updates the transformation matrix.
 	 */
-	protected void updateTansformationMatrix(float[] mvpMatrix){
+	protected void updateTansformationMatrix(){
 		// /!\ The correct order is: translation * rotation * scaling
 		Matrix.setIdentityM(this.transformationMatrix, 0);
 		Matrix.multiplyMM(this.tempMatrix, 0, this.translationMatrix, 0, this.rotationMatrix, 0);

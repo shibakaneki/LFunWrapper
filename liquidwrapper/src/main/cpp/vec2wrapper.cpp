@@ -93,6 +93,7 @@ JNIEXPORT jlong JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Vec2_
 
     b2Vec2* vec2 = (b2Vec2*)vec2Ptr;
     b2Vec2 skewedVec = vec2->Skew();
+
     return (jlong)new b2Vec2(skewedVec.x, skewedVec.y);
 }
 

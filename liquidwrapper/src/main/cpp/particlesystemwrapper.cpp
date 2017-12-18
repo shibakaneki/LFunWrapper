@@ -125,7 +125,7 @@ JNIEXPORT jint JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Partic
     return (jint)pPartSys->GetStuckCandidateCount();
 }
 
-JNIEXPORT jlong JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_ParticleSystem_1setDestructionByAge(
+JNIEXPORT void JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_ParticleSystem_1setDestructionByAge(
         JNIEnv *env,
         jobject obj,
         jlong particleSystemPtr,

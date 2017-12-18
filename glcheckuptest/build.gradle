@@ -37,4 +37,7 @@ dependencies {
 
     // Liquidfun wrapper
     compile project(path: ':liquidwrapper')
+
+    // Leak Canary
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.4'
 }

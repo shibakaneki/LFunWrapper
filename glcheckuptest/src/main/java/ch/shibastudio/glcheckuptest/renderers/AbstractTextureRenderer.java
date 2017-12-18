@@ -65,7 +65,7 @@ public abstract class AbstractTextureRenderer implements ITextureRenderer, Textu
 		if(this.lastUpdateTime > 0){
 			float dt = (float)(t - this.lastUpdateTime);
 			this.fps = 1000.0f / dt;
-			Log.i(LOG_TAG, "FPS: " +fps);
+			//Log.i(LOG_TAG, "FPS: " +fps);
 		}
 
 		this.lastUpdateTime = t;
@@ -90,7 +90,7 @@ public abstract class AbstractTextureRenderer implements ITextureRenderer, Textu
 
 	@Override
 	public void notifySlowRendering(long exceedingMs){
-		Log.w(LOG_TAG, "Slow rendering! (overtime of " +exceedingMs +" ms)");
+		//Log.w(LOG_TAG, "Slow rendering! (overtime of " +exceedingMs +" ms)");
 	}
 
 	private static class RenderThread extends Thread{
