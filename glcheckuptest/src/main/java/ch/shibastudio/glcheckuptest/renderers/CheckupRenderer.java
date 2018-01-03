@@ -758,8 +758,8 @@ public class CheckupRenderer implements GLSurfaceView.Renderer {
 			float x = minX + this.random.nextFloat() * (maxX - minX);
 			float y = this.liquidJarLeftBody.getPositionY();
 			particleDef.setPosition(x, y);
-			this.liquidParticleSystem.createParticle(particleDef);
-			this.liquidEntity.addParticle(new Point(x, y, 0f), particleColor, 38f);
+			//this.liquidParticleSystem.createParticle(particleDef);
+			//this.liquidEntity.addParticle(x, y, particleColor, 38f);
 		}
 	}
 }

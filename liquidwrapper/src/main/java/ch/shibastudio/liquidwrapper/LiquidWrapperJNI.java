@@ -156,7 +156,7 @@ public class LiquidWrapperJNI {
 	public final static native void ParticleDef_delete(long particleDefPtr);
 	public final static native void ParticleDef_setFlags(long particleDefPtr, int flag);
 	public final static native int ParticleDef_getFlags(long particleDefPtr);
-	public final static native void ParticleDef_setPosition(long particleDefPtr, long positionPtr);
+	public final static native void ParticleDef_setPosition(long particleDefPtr, float x, float y);
 	public final static native long ParticleDef_getPosition(long particleDefPtr);
 	public final static native void ParticleDef_setVelocity(long particleDefPtr, long velocityPtr);
 	public final static native long ParticleDef_getVelocity(long particleDefPtr);

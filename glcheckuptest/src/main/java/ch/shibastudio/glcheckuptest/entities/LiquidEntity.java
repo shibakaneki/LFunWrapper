@@ -66,7 +66,7 @@ public class LiquidEntity {
         return this.currentParticleCount;
     }
 
-    public void addParticle(Point position, int color, float particleSize){
+    public void addParticle(float x, float y, int color, float particleSize){
         final int particleOffset = this.nextParticle * TOTAL_COMPONENT_COUNT;
         int currentOffset = particleOffset;
         this.nextParticle++;
@@ -79,9 +79,9 @@ public class LiquidEntity {
             this.nextParticle = 0;
         }
 
-        this.particles[currentOffset++] = position.x;
-        this.particles[currentOffset++] = position.y;
-        this.particles[currentOffset++] = position.z;
+        this.particles[currentOffset++] = x;
+        this.particles[currentOffset++] = y;
+        this.particles[currentOffset++] = 0.0f;
 
         this.particles[currentOffset++] = (float)Color.red(color) / 255f;
         this.particles[currentOffset++] = (float)Color.green(color) / 255f;
@@ -100,32 +100,35 @@ public class LiquidEntity {
      * @param colorBuffer as the color buffer.
      */
     public void updateParticles(ByteBuffer positionBuffer, ByteBuffer colorBuffer){
-        final int POS_ELEM_COUNT = 2;
-        final int COLOR_ELEM_COUNT = 4;
+
+        // TODO: The floatbuffer is creating memory leaks! Fix that!
+
 
         // x0, y0, x1, y1, ...,xn-1, yn-1
         FloatBuffer posBuffer = positionBuffer.asFloatBuffer();
 
         // r0, g0, b0, a0, r1, g1, b1, a1, ..., rn-1, gn-1, bn-1, an-1
-        FloatBuffer colBuffer = colorBuffer.asFloatBuffer();
+        //FloatBuffer colBuffer = colorBuffer.asFloatBuffer();
 
         int offset = 0;
 
         for(int n=0; n<this.currentParticleCount; n++){
             // Position
-            this.particles[offset++] = posBuffer.get(POS_ELEM_COUNT*n);
-            this.particles[offset++] = posBuffer.get(POS_ELEM_COUNT*n+1);
+            this.particles[offset++] = posBuffer.get((POSITION_COMPONENT_COUNT-1)*n);
+            this.particles[offset++] = posBuffer.get((POSITION_COMPONENT_COUNT-1)*n+1);
             this.particles[offset++] = 0f;
 
             // Color
-            this.particles[offset++] = (colorBuffer.get(COLOR_ELEM_COUNT*n) & 0xFF) / 255f;
-            this.particles[offset++] = (colorBuffer.get(COLOR_ELEM_COUNT*n+1) & 0xFF) / 255f;
-            this.particles[offset++] = (colorBuffer.get(COLOR_ELEM_COUNT*n+2) & 0xFF) / 255f;
-            this.particles[offset++] = (colorBuffer.get(COLOR_ELEM_COUNT*n+3) & 0xFF) / 255f;
+            this.particles[offset++] = (colorBuffer.get(COLOR_COMPONENT_COUNT*n) & 0xFF) / 255f;
+            this.particles[offset++] = (colorBuffer.get(COLOR_COMPONENT_COUNT*n+1) & 0xFF) / 255f;
+            this.particles[offset++] = (colorBuffer.get(COLOR_COMPONENT_COUNT*n+2) & 0xFF) / 255f;
+            this.particles[offset++] = (colorBuffer.get(COLOR_COMPONENT_COUNT*n+3) & 0xFF) / 255f;
 
             offset++;
             offset++;
         }
+
+ //       posBuffer = null;
 
         // Update all the buffer in one shot.
         this.vertexArray.updateBuffer(this.particles, 0, this.currentParticleCount * TOTAL_COMPONENT_COUNT);

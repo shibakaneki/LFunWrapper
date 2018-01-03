@@ -38,20 +38,12 @@ public class ParticleDef extends AbstractNativeObject{
 	}
 
 	/**
-	 * Sets the particle position.
-	 * @param position as the position to set.
-	 */
-	public void setPosition(Vec2 position){
-		LiquidWrapperJNI.ParticleDef_setPosition(super.getPtr(), position.getPtr());
-	}
-
-	/**
 	 * Sets the position.
 	 * @param x as the X coordinate.
 	 * @param y as the Y coordinate.
 	 */
 	public void setPosition(float x, float y){
-		LiquidWrapperJNI.ParticleDef_setPosition(super.getPtr(), new Vec2(x, y).getPtr());
+		LiquidWrapperJNI.ParticleDef_setPosition(super.getPtr(), x, y);
 	}
 
 	/**

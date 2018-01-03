@@ -107,6 +107,8 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 	// Liquid
 	private LiquidEntity liquidEntity;
 	private LiquidShaderProgram liquidShaderProgram;
+	private ParticleDef particleDef;
+	int particleColor = Color.argb(170, 0, 172, 231);
 
 	private ParticleSystem liquidParticleSystem;
 	private InputPipeEntity inputPipeEntity;
@@ -434,6 +436,11 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 		particleSystemDef.setMaxCount(MAX_PARTICLES);
 		particleSystemDef.setGravityScale(2f);
 		this.liquidParticleSystem = this.world.createParticleSystem(particleSystemDef);
+
+		this.particleDef = new ParticleDef();
+		this.particleDef.setColor(Color.red(this.particleColor), Color.green(this.particleColor), Color.blue(this.particleColor), Color.alpha(this.particleColor));
+		this.particleDef.setFlags(ParticleFlag.viscousParticle | ParticleFlag.staticPressureParticle);
+
 		this.addParticles();
 	}
 
@@ -520,21 +527,15 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 	}
 
 	private void addParticles(){
-		int particleColor = Color.argb(170, 0, 172, 231);
-		ParticleDef particleDef = new ParticleDef();
-		particleDef.setColor(Color.red(particleColor), Color.green(particleColor), Color.blue(particleColor), Color.alpha(particleColor));
-		particleDef.setFlags(ParticleFlag.viscousParticle | ParticleFlag.staticPressureParticle);
-
 		float minX = this.liquidJarLeftBody.getPositionX() + 0.02f;
 		float maxX = this.liquidJarRightBody.getPositionX() - 0.02f;
-
 
 		for(int i=0; i<NEW_PARTICLE_COUNT; i++){
 			float x = minX + this.random.nextFloat() * (maxX - minX);
 			float y = this.liquidJarLeftBody.getPositionY();
-			particleDef.setPosition(x, y);
+			this.particleDef.setPosition(x, y);
 			this.liquidParticleSystem.createParticle(particleDef);
-			this.liquidEntity.addParticle(new Point(x, y, 0f), particleColor, this.particleSize);
+			this.liquidEntity.addParticle(x, y, this.particleColor, this.particleSize);
 		}
 	}
 }

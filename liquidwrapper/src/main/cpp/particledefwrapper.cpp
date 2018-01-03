@@ -46,11 +46,11 @@ JNIEXPORT void JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Partic
         JNIEnv *env,
         jobject obj,
         jlong particleDefPtr,
-        jlong positionPtr){
+        jfloat x,
+        jfloat y){
 
     b2ParticleDef* pPdef = (b2ParticleDef*)particleDefPtr;
-    b2Vec2* pPos = (b2Vec2*)positionPtr;
-    pPdef->position = *pPos;
+    pPdef->SetPosition((float)x, (float)y);
 }
 
 JNIEXPORT jlong JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_ParticleDef_1getPosition(
