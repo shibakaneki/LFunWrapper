@@ -10,6 +10,7 @@ import android.util.Log;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.ArrayList;
 import java.util.Random;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -167,6 +168,7 @@ public class CheckupRenderer implements GLSurfaceView.Renderer {
 	private Random random = new Random();
 	private ByteBuffer posBuffer = ByteBuffer.allocateDirect(MAX_PARTICLES * PARTICLE_COORD_COUNT  * OpenGLUtils.BYTE_PER_FLOAT).order(ByteOrder.nativeOrder());
 	private ByteBuffer colorBuffer = ByteBuffer.allocateDirect(MAX_PARTICLES * PARTICLE_COLOR_COUNT * OpenGLUtils.BYTE_PER_FLOAT).order(ByteOrder.nativeOrder());
+	private ByteBuffer veloBuffer = ByteBuffer.allocateDirect(MAX_PARTICLES * PARTICLE_COORD_COUNT  * OpenGLUtils.BYTE_PER_FLOAT).order(ByteOrder.nativeOrder());
 
 	private long lastRefreshTime = 0l;
 
@@ -407,8 +409,9 @@ public class CheckupRenderer implements GLSurfaceView.Renderer {
 			case LIQUID:
 				this.liquidParticleSystem.copyPositionBuffer(0, this.liquidEntity.getParticleCount(), posBuffer);
 				this.liquidParticleSystem.copyColorBuffer(0, this.liquidEntity.getParticleCount(), colorBuffer);
+				this.liquidParticleSystem.copyVelocityBuffer(veloBuffer);
 
-				this.liquidEntity.updateParticles(posBuffer, colorBuffer);
+				this.liquidEntity.updateParticles(posBuffer, colorBuffer, veloBuffer, new ArrayList<Integer>());
 
 				break;
 		}

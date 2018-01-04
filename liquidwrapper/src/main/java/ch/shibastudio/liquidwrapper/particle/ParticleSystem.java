@@ -57,22 +57,18 @@ public class ParticleSystem extends AbstractNativeObject{
 
 	/**
 	 * Copy the weight buffer.
-	 * @param startIndex as the start index of the copy.
-	 * @param numParticles as the number of particle position to copy
 	 * @param outBuffer as the destination buffer.
 	 */
-	public void copyWeightBuffer(int startIndex, int numParticles, ByteBuffer outBuffer){
-		LiquidWrapperJNI.ParticleSystem_getWeightBuffer(super.getPtr(), startIndex, numParticles, outBuffer);
+	public void copyWeightBuffer(ByteBuffer outBuffer){
+		LiquidWrapperJNI.ParticleSystem_getWeightBuffer(super.getPtr(), outBuffer);
 	}
 
 	/**
 	 * Copy the velocity buffer.
-	 * @param startIndex as the start index of the copy.
-	 * @param numParticles as the number of particle position to copy
 	 * @param outBuffer as the destination buffer.
 	 */
-	public void copyVelocityBuffer(int startIndex, int numParticles, ByteBuffer outBuffer){
-		LiquidWrapperJNI.ParticleSystem_getVelocityBuffer(super.getPtr(), startIndex, numParticles, outBuffer);
+	public void copyVelocityBuffer(ByteBuffer outBuffer){
+		LiquidWrapperJNI.ParticleSystem_getVelocityBuffer(super.getPtr(), outBuffer);
 	}
 
 	/**
@@ -87,12 +83,10 @@ public class ParticleSystem extends AbstractNativeObject{
 
 	/**
 	 * Copy the position buffer.
-	 * @param startIndex as the start index of the copy.
-	 * @param numParticles as the number of particle position to copy
 	 * @param outBuffer as the destination buffer.
 	 */
-	public void copyStuckCandidatesBuffer(int startIndex, int numParticles, ByteBuffer outBuffer){
-		LiquidWrapperJNI.ParticleSystem_getStuckCandidates(super.getPtr(), startIndex, numParticles, outBuffer);
+	public void copyStuckCandidatesBuffer(ByteBuffer outBuffer){
+		LiquidWrapperJNI.ParticleSystem_getStuckCandidates(super.getPtr(), outBuffer);
 	}
 
 	/**
@@ -142,5 +136,14 @@ public class ParticleSystem extends AbstractNativeObject{
 	 */
 	public ParticleGroup createParticleGroup(ParticleGroupDef particleGroupDef){
 		return new ParticleGroup(LiquidWrapperJNI.ParticleSystem_createParticleGroup(super.getPtr(), particleGroupDef.getPtr()));
+	}
+
+	/**
+	 * Sets a particle lifetime.
+	 * @param particleIndex as the particle index.
+	 * @param lifetime as the lifetime.
+	 */
+	public void setParticleLifetime(int particleIndex, float lifetime){
+		LiquidWrapperJNI.ParticleSystem_setParticleLifetime(super.getPtr(), particleIndex, lifetime);
 	}
 }

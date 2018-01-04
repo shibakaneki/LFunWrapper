@@ -8,6 +8,8 @@ import android.support.annotation.NonNull;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import ch.shibastudio.glcheckuptest.CheckupConstants;
@@ -57,7 +59,7 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 	private final static float WORLD_TOP = 10f;
 	private final static float WORLD_BOTTOM = 0f;
 	private final static float WORLD_HEIGHT = WORLD_TOP - WORLD_BOTTOM;
-	private final static int MAX_PARTICLES = 1000;//000;
+	private final static int MAX_PARTICLES = 1000;//1000;//000;
 	private final static int NEW_PARTICLE_COUNT = 7;//4;
 	private final static float GROUND_Y = 538f/640f;
 	private final static float GROUND_H = 20f/640f;
@@ -79,6 +81,7 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 	private final static int POSITION_ITERATION = 1;
 	private final static int PARTICLE_ITERATION = 1;
 	private final int PARTICLE_COORD_COUNT = 2;
+	private final int PARTICLE_VELOCITY_COUNT = 2;
 	private final int PARTICLE_COLOR_COUNT = 4;
 	private final static float RATIO_LEVEL_1_HOLE_TARGET = 0.26f;
 	private final static float RATIO_LEVEL_2_HOLE_TARGET = 0.45f;
@@ -127,7 +130,9 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 
 	private Random random = new Random();
 	private ByteBuffer posBuffer = ByteBuffer.allocateDirect(MAX_PARTICLES * PARTICLE_COORD_COUNT  * OpenGLUtils.BYTE_PER_FLOAT).order(ByteOrder.nativeOrder());
-	private ByteBuffer colorBuffer = ByteBuffer.allocateDirect(MAX_PARTICLES * PARTICLE_COLOR_COUNT/* * OpenGLUtils.BYTE_PER_FLOAT*/).order(ByteOrder.nativeOrder());
+	private ByteBuffer colorBuffer = ByteBuffer.allocateDirect(MAX_PARTICLES * PARTICLE_COLOR_COUNT).order(ByteOrder.nativeOrder());
+	private ByteBuffer velocityBuffer = ByteBuffer.allocateDirect(MAX_PARTICLES * PARTICLE_VELOCITY_COUNT  * OpenGLUtils.BYTE_PER_FLOAT).order(ByteOrder.nativeOrder());
+	private List<Integer> indexesToDelete = new ArrayList<>();
 
 	private long lastTargetBlinkTime;
 	private boolean isInTarget = false;
@@ -436,6 +441,7 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 		particleSystemDef.setMaxCount(MAX_PARTICLES);
 		particleSystemDef.setGravityScale(2f);
 		this.liquidParticleSystem = this.world.createParticleSystem(particleSystemDef);
+		this.liquidParticleSystem.setDestructionByAge(true);
 
 		this.particleDef = new ParticleDef();
 		this.particleDef.setColor(Color.red(this.particleColor), Color.green(this.particleColor), Color.blue(this.particleColor), Color.alpha(this.particleColor));
@@ -504,11 +510,18 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 		this.groundRightEntity.updateEntity(deltaYW);
 
 		if(USE_LIQUID){
-			this.liquidParticleSystem.copyPositionBuffer(0, this.liquidEntity.getParticleCount(), posBuffer);
-			this.liquidParticleSystem.copyColorBuffer(0, this.liquidEntity.getParticleCount(), colorBuffer);
-			this.liquidEntity.updateParticles(posBuffer, colorBuffer);
-		}
+			// Update the particles to display.
+			this.liquidParticleSystem.copyPositionBuffer(0, this.liquidEntity.getParticleCount(), this.posBuffer);
+			this.liquidParticleSystem.copyColorBuffer(0, this.liquidEntity.getParticleCount(), this.colorBuffer);
+			this.liquidParticleSystem.copyVelocityBuffer(this.velocityBuffer);
+			this.liquidEntity.updateParticles(this.posBuffer, this.colorBuffer, this.velocityBuffer, this.indexesToDelete);
 
+			if(!indexesToDelete.isEmpty()){
+				for(Integer index : indexesToDelete){
+					this.liquidParticleSystem.destroyParticle(index);
+				}
+			}
+		}
 	}
 
 	/**
@@ -530,8 +543,11 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 		float minX = this.liquidJarLeftBody.getPositionX() + 0.02f;
 		float maxX = this.liquidJarRightBody.getPositionX() - 0.02f;
 
-		for(int i=0; i<NEW_PARTICLE_COUNT; i++){
-			float x = minX + this.random.nextFloat() * (maxX - minX);
+		int freeParticlecount = this.liquidParticleSystem.getMaxParticleCount() - this.liquidParticleSystem.getParticleCount();
+		int particlesToCreate = Math.min(freeParticlecount, NEW_PARTICLE_COUNT);
+
+		for(int i=0; i<particlesToCreate; i++){
+			float x =  minX + this.random.nextFloat() * (maxX - minX);
 			float y = this.liquidJarLeftBody.getPositionY();
 			this.particleDef.setPosition(x, y);
 			this.liquidParticleSystem.createParticle(particleDef);

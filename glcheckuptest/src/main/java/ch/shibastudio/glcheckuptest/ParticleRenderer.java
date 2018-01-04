@@ -158,7 +158,7 @@ public class ParticleRenderer {
 			// grab the most current particle buffers
 			particleSystem.copyPositionBuffer(0, worldParticleCount, this.particlePositionBuffer);
 			particleSystem.copyColorBuffer(0, worldParticleCount, this.particleColorBuffer);
-			particleSystem.copyWeightBuffer(0, worldParticleCount, this.particleWeightBuffer);
+			//particleSystem.copyWeightBuffer(0, worldParticleCount, this.particleWeightBuffer);
 
 			GLES20.glClearColor(0, 0, 0, 0);
 

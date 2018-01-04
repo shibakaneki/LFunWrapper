@@ -5,6 +5,8 @@ import android.graphics.Color;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import ch.shibastudio.glcheckuptest.data.VertexArray;
@@ -31,6 +33,7 @@ public class LiquidEntity {
     private final static int POSITION_COMPONENT_COUNT = 3;
     private final static int COLOR_COMPONENT_COUNT = 4;
     private final static int POINT_SIZE_COMPONENT_COUNT = 2;
+    private final static int VELOCITY_COMPONENT_COUNT = 2;
 
     private final static int TOTAL_COMPONENT_COUNT = POSITION_COMPONENT_COUNT + COLOR_COMPONENT_COUNT + POINT_SIZE_COMPONENT_COUNT;
     private final static int STRIDE = TOTAL_COMPONENT_COUNT * OpenGLUtils.BYTE_PER_FLOAT;
@@ -88,7 +91,7 @@ public class LiquidEntity {
         this.particles[currentOffset++] = (float)Color.blue(color) / 255f;
         this.particles[currentOffset++] = (float)Color.alpha(color) / 255f;
 
-        this.particles[currentOffset++] = Math.max(0.40f /*0.71f*/, this.random.nextFloat());
+        this.particles[currentOffset++] = 0.5f;//Math.max(0.40f /*0.71f*/, this.random.nextFloat());
         this.particles[currentOffset++] = 1.4f*particleSize;
 
         this.vertexArray.updateBuffer(this.particles, particleOffset, TOTAL_COMPONENT_COUNT);
@@ -98,37 +101,51 @@ public class LiquidEntity {
      * Updates the particles.
      * @param positionBuffer as the position buffer.
      * @param colorBuffer as the color buffer.
+     * @param velocityBuffer as the velocity buffer.
      */
-    public void updateParticles(ByteBuffer positionBuffer, ByteBuffer colorBuffer){
+    public void updateParticles(ByteBuffer positionBuffer, ByteBuffer colorBuffer, ByteBuffer velocityBuffer, List<Integer> indexesToDelete){
 
-        // TODO: The floatbuffer is creating memory leaks! Fix that!
-
+        indexesToDelete.clear();
 
         // x0, y0, x1, y1, ...,xn-1, yn-1
         FloatBuffer posBuffer = positionBuffer.asFloatBuffer();
 
-        // r0, g0, b0, a0, r1, g1, b1, a1, ..., rn-1, gn-1, bn-1, an-1
-        //FloatBuffer colBuffer = colorBuffer.asFloatBuffer();
+        // vx0, vy0, vx1, vy1, ...,vxn-1, vyn-1
+        FloatBuffer veloBuffer = velocityBuffer.asFloatBuffer();
 
         int offset = 0;
 
         for(int n=0; n<this.currentParticleCount; n++){
+            float veloX = veloBuffer.get(VELOCITY_COMPONENT_COUNT*n);
+            float veloY = veloBuffer.get(VELOCITY_COMPONENT_COUNT*n+1);
+
             // Position
-            this.particles[offset++] = posBuffer.get((POSITION_COMPONENT_COUNT-1)*n);
-            this.particles[offset++] = posBuffer.get((POSITION_COMPONENT_COUNT-1)*n+1);
+            float x = posBuffer.get((POSITION_COMPONENT_COUNT-1)*n);
+            float y = posBuffer.get((POSITION_COMPONENT_COUNT-1)*n+1);
+
+            this.particles[offset++] = x;
+            this.particles[offset++] = y;
             this.particles[offset++] = 0f;
 
+            boolean isToBeDeleted =
+                    (x < -3.5) & (y < 9) |
+                    (x > 3.5) & (y < 9) |
+                    (y < -0.1)/* |
+                    ((y < 1.8) & (y > 1.6) & (veloY < 0.000001))*/;
+
             // Color
-            this.particles[offset++] = (colorBuffer.get(COLOR_COMPONENT_COUNT*n) & 0xFF) / 255f;
-            this.particles[offset++] = (colorBuffer.get(COLOR_COMPONENT_COUNT*n+1) & 0xFF) / 255f;
-            this.particles[offset++] = (colorBuffer.get(COLOR_COMPONENT_COUNT*n+2) & 0xFF) / 255f;
+            this.particles[offset++] = isToBeDeleted ? 255f : (colorBuffer.get(COLOR_COMPONENT_COUNT*n) & 0xFF) / 255f;
+            this.particles[offset++] = isToBeDeleted ? 0f: (colorBuffer.get(COLOR_COMPONENT_COUNT*n+1) & 0xFF) / 255f;
+            this.particles[offset++] = isToBeDeleted ? 0f: (colorBuffer.get(COLOR_COMPONENT_COUNT*n+2) & 0xFF) / 255f;
             this.particles[offset++] = (colorBuffer.get(COLOR_COMPONENT_COUNT*n+3) & 0xFF) / 255f;
 
             offset++;
             offset++;
-        }
 
- //       posBuffer = null;
+            if(isToBeDeleted){
+                indexesToDelete.add(n);
+            }
+        }
 
         // Update all the buffer in one shot.
         this.vertexArray.updateBuffer(this.particles, 0, this.currentParticleCount * TOTAL_COMPONENT_COUNT);

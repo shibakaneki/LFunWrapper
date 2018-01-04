@@ -281,10 +281,10 @@ public class LiquidWrapperJNI {
 	public final static native int ParticleSystem_createParticle(long particleSystemPtr, long particleDefPtr);
 	public final static native void ParticleSystem_destroyParticle(long particleSystemPtr, int particleIndex);
 	public final static native void ParticleSystem_getPositionBuffer(long particleSystemPtr, int startIndex, int particleCount, ByteBuffer outBuffer);
-	public final static native void ParticleSystem_getWeightBuffer(long particleSystemPtr, int startIndex, int particleCount, ByteBuffer outBuffer);
-	public final static native void ParticleSystem_getVelocityBuffer(long particleSystemPtr, int startIndex, int particleCount, ByteBuffer outBuffer);
+	public final static native void ParticleSystem_getWeightBuffer(long particleSystemPtr, ByteBuffer outBuffer);
+	public final static native void ParticleSystem_getVelocityBuffer(long particleSystemPtr, ByteBuffer outBuffer);
 	public final static native void ParticleSystem_getColorBuffer(long particleSystemPtr, int startIndex, int particleCount, ByteBuffer outBuffer);
-	public final static native void ParticleSystem_getStuckCandidates(long particleSystemPtr, int startIndex, int particleCount, ByteBuffer outBuffer);
+	public final static native void ParticleSystem_getStuckCandidates(long particleSystemPtr, ByteBuffer outBuffer);
 	public final static native int ParticleSystem_getStuckCandidatesCount(long particleSystemPtr);
 	public final static native void ParticleSystem_setDestructionByAge(long particleSystemPtr, boolean isDestroyingByAge);
 	public final static native int ParticleSystem_getParticleCount(long particleSystemPtr);
@@ -293,6 +293,7 @@ public class LiquidWrapperJNI {
 	public final static native void ParticleSystem_setMaxParticleCount(long particleSystemPtr, int maxCount);
 	public final static native int ParticleSystem_getMaxParticleCount(long particleSystemPtr);
 	public final static native long ParticleSystem_createParticleGroup(long particleSystemPtr, long particleGroupDefPtr);
+	public final static native void ParticleSystem_setParticleLifetime(long particleSystemPtr, int particleIndex, float lifetime);
 
 	// Transform
 	public final static native long Transform_new();

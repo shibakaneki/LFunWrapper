@@ -10,6 +10,7 @@ public class OpenGLUtils {
 	private final static String TAG = "GLES";
 	public final static boolean IS_DEBUG = false;
 	public final static int BYTE_PER_FLOAT = 4;
+	public final static int BYTE_PER_INT = 4;
 
 	/**
 	 * Loads the given shader.

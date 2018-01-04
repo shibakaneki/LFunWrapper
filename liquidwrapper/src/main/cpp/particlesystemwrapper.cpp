@@ -35,55 +35,51 @@ JNIEXPORT void JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Partic
         jint particleCount,
         jobject outBuffer){
 
-    /*const int PARTICLE_ELEMENT_SIZE = sizeof(float32);
+    const int PARTICLE_ELEMENT_SIZE = sizeof(float32);
     const int PARTICLE_STRIDE = 2*PARTICLE_ELEMENT_SIZE;
-    const int VEC2_SIZE = sizeof(b2Vec2);
 
-    void *outBuf = env->GetDirectBufferAddress(outBuffer);
+    int partCount = (int)particleCount;
+    int start = (int)startIndex;
+    jbyte* outBuf = (jbyte*)env->GetDirectBufferAddress(outBuffer);
+
     b2ParticleSystem* pPartSys = (b2ParticleSystem*)particleSystemPtr;
     b2Vec2 *positions = pPartSys->GetPositionBuffer();
 
-
-    outBuf += (startIndex * PARTICLE_STRIDE);
-    positions += (startIndex * VEC2_SIZE);
-
-    for(int i=0; i<particleCount; i++){
-        outBuf += (i*PARTICLE_STRIDE);
-        positions += (i*VEC2_SIZE);
-
-        memcpy(outBuf, &positions->x, PARTICLE_ELEMENT_SIZE);
-        memcpy(outBuf + PARTICLE_ELEMENT_SIZE, &positions->y, PARTICLE_ELEMENT_SIZE);
-    }*/
+    memcpy(outBuf, &positions->x + start * PARTICLE_STRIDE, partCount * PARTICLE_STRIDE);
 }
 
 JNIEXPORT void JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_ParticleSystem_1getWeightBuffer(
         JNIEnv *env,
         jobject obj,
         jlong particleSystemPtr,
-        jint startIndex,
-        jint particleCount,
-        jbyte* outBuffer){
+        jobject outBuffer){
 
+    const int PARTICLE_ELEMENT_SIZE = sizeof(float32);
+    const int PARTICLE_STRIDE = 2*PARTICLE_ELEMENT_SIZE;
+
+    jbyte* outBuf = (jbyte*)env->GetDirectBufferAddress(outBuffer);
     b2ParticleSystem* pPartSys = (b2ParticleSystem*)particleSystemPtr;
-    // TODO: Implement me!
+    float32* weights = pPartSys->GetWeightBuffer();
+    int partCount = (int)pPartSys->GetParticleCount();
 
-
-
+    memcpy(outBuf, &weights, partCount * PARTICLE_STRIDE);
 }
 
 JNIEXPORT void JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_ParticleSystem_1getVelocityBuffer(
         JNIEnv *env,
         jobject obj,
         jlong particleSystemPtr,
-        jint startIndex,
-        jint particleCount,
-        jbyte* outBuffer){
+        jobject outBuffer){
 
+    const int PARTICLE_ELEMENT_SIZE = sizeof(float32);
+    const int PARTICLE_STRIDE = 2*PARTICLE_ELEMENT_SIZE;
+
+    jbyte* outBuf = (jbyte*)env->GetDirectBufferAddress(outBuffer);
     b2ParticleSystem* pPartSys = (b2ParticleSystem*)particleSystemPtr;
-    // TODO: Implement me!
+    b2Vec2 *velocities = pPartSys->GetVelocityBuffer();
+    int partCount = (int)pPartSys->GetParticleCount();
 
-
-
+    memcpy(outBuf, &velocities->x, partCount * PARTICLE_STRIDE);
 }
 
 JNIEXPORT void JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_ParticleSystem_1getColorBuffer(
@@ -92,28 +88,34 @@ JNIEXPORT void JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Partic
         jlong particleSystemPtr,
         jint startIndex,
         jint particleCount,
-        jbyte* outBuffer){
+        jobject outBuffer){
+
+    const int COLOR_ELEMENT_SIZE = sizeof(float32);
+
+    int partCount = (int)particleCount;
+    int start = (int)startIndex;
+    jbyte* outBuf = (jbyte*)env->GetDirectBufferAddress(outBuffer);
 
     b2ParticleSystem* pPartSys = (b2ParticleSystem*)particleSystemPtr;
-    // TODO: Implement me!
+    b2ParticleColor *colors = pPartSys->GetColorBuffer();
 
-
-
+    memcpy(outBuf, &colors->r + start * COLOR_ELEMENT_SIZE, partCount * COLOR_ELEMENT_SIZE);
 }
 
 JNIEXPORT void JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_ParticleSystem_1getStuckCandidates(
         JNIEnv *env,
         jobject obj,
         jlong particleSystemPtr,
-        jint startIndex,
-        jint particleCount,
-        jbyte* outBuffer){
+        jobject outBuffer){
+
+    const int PARTICLE_INDEX_SIZE = sizeof(int32);
+    jbyte* outBuf = (jbyte*)env->GetDirectBufferAddress(outBuffer);
 
     b2ParticleSystem* pPartSys = (b2ParticleSystem*)particleSystemPtr;
-    // TODO: Implement me!
+    int32 stuckCount = pPartSys->GetStuckCandidateCount();
+    const int32 *candidates = pPartSys->GetStuckCandidates();
 
-
-
+    memcpy(outBuf, &candidates, stuckCount * PARTICLE_INDEX_SIZE);
 }
 
 JNIEXPORT jint JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_ParticleSystem_1getStuckCandidatesCount(
@@ -192,6 +194,16 @@ JNIEXPORT jlong JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Parti
     return (jlong)pPartSys->CreateParticleGroup(*pParticleGroupDef);
 }
 
+JNIEXPORT void JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_ParticleSystem_1setParticleLifetime(
+        JNIEnv *env,
+        jobject obj,
+        jlong particleSystemPtr,
+        jint particleIndex,
+        jfloat lifetime){
+
+    b2ParticleSystem* pPartSys = (b2ParticleSystem*)particleSystemPtr;
+    pPartSys->SetParticleLifetime((int32)particleIndex, (float32)lifetime);
+}
 
 #ifdef __cplusplus
 }
