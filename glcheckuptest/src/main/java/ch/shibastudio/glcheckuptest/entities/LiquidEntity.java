@@ -3,20 +3,15 @@ package ch.shibastudio.glcheckuptest.entities;
 import android.graphics.Color;
 
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import ch.shibastudio.glcheckuptest.data.VertexArray;
-import ch.shibastudio.glcheckuptest.geometry.Point;
-import ch.shibastudio.glcheckuptest.geometry.Vector;
 import ch.shibastudio.glcheckuptest.programs.LiquidShaderProgram;
 import ch.shibastudio.glcheckuptest.utils.OpenGLUtils;
 
 import static android.opengl.GLES20.GL_BLEND;
-import static android.opengl.GLES20.GL_ONE;
 import static android.opengl.GLES20.GL_ONE_MINUS_SRC_ALPHA;
 import static android.opengl.GLES20.GL_POINTS;
 import static android.opengl.GLES20.GL_SRC_ALPHA;
@@ -30,7 +25,7 @@ import static android.opengl.GLES20.glEnable;
  */
 
 public class LiquidEntity {
-    private final static int POSITION_COMPONENT_COUNT = 3;
+    private final static int POSITION_COMPONENT_COUNT = 2;
     private final static int COLOR_COMPONENT_COUNT = 4;
     private final static int POINT_SIZE_COMPONENT_COUNT = 2;
     private final static int VELOCITY_COMPONENT_COUNT = 2;
@@ -84,7 +79,6 @@ public class LiquidEntity {
 
         this.particles[currentOffset++] = x;
         this.particles[currentOffset++] = y;
-        this.particles[currentOffset++] = 0.0f;
 
         this.particles[currentOffset++] = (float)Color.red(color) / 255f;
         this.particles[currentOffset++] = (float)Color.green(color) / 255f;
@@ -120,12 +114,11 @@ public class LiquidEntity {
             float veloY = veloBuffer.get(VELOCITY_COMPONENT_COUNT*n+1);
 
             // Position
-            float x = posBuffer.get((POSITION_COMPONENT_COUNT-1)*n);
-            float y = posBuffer.get((POSITION_COMPONENT_COUNT-1)*n+1);
+            float x = posBuffer.get((POSITION_COMPONENT_COUNT)*n);
+            float y = posBuffer.get((POSITION_COMPONENT_COUNT)*n+1);
 
             this.particles[offset++] = x;
             this.particles[offset++] = y;
-            this.particles[offset++] = 0f;
 
             boolean isToBeDeleted =
                     (x < -3.5) & (y < 9) |
