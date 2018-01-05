@@ -55,11 +55,13 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 	private final static long TARGET_BLINK = 500;
 
 	private final static boolean USE_LIQUID = true;
+	private final static float EARTH_GRAVITY = 9.81f;
+	private final static float WATER_DENSITY = 998.2071f; //  20°C
 
 	private final static float WORLD_TOP = 10f;
 	private final static float WORLD_BOTTOM = 0f;
 	private final static float WORLD_HEIGHT = WORLD_TOP - WORLD_BOTTOM;
-	private final static int MAX_PARTICLES = 1000;//1000;//000;
+	private final static int MAX_PARTICLES = 100000;//1000;//000;
 	private final static int NEW_PARTICLE_COUNT = 7;//4;
 	private final static float GROUND_Y = 538f/640f;
 	private final static float GROUND_H = 20f/640f;
@@ -168,7 +170,8 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 		this.targetGuideRectEntity = new TargetGuideRectEntity(0.0f, 0.0f, this.getOpenGLDimension(HOLE_W*deltaXW), this.getOpenGLDimension(1.2f*GROUND_H * deltaYW));
 		this.targetGuideArrowEntity = new TargetGuideArrowEntity(0.0f, 0.0f, this.getOpenGLDimension(TARGET_ARROW_W * deltaXW), this.getOpenGLDimension(TARGET_ARROW_H * deltaYW));
 
-		this.particleSize = (2f / WORLD_HEIGHT) * (2f*PARTICLE_SIZE_WORLD) * super.getHeight();
+		// 2 x (glDeltaH) x particlesRadius / worldH x pixelH
+		this.particleSize = 2f * 2f * PARTICLE_SIZE_WORLD / WORLD_HEIGHT * super.getHeight();
 
 		this.createWalls();
 		this.createGround();
@@ -437,15 +440,15 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 	private void createLiquid(){
 		ParticleSystemDef particleSystemDef =  new ParticleSystemDef();
 		particleSystemDef.setRadius(PARTICLE_SIZE_WORLD);
-		particleSystemDef.setDensity(5.0f);
+		particleSystemDef.setDensity(WATER_DENSITY);
 		particleSystemDef.setMaxCount(MAX_PARTICLES);
-		particleSystemDef.setGravityScale(2f);
+		particleSystemDef.setGravityScale(EARTH_GRAVITY);
 		this.liquidParticleSystem = this.world.createParticleSystem(particleSystemDef);
 		this.liquidParticleSystem.setDestructionByAge(true);
 
 		this.particleDef = new ParticleDef();
 		this.particleDef.setColor(Color.red(this.particleColor), Color.green(this.particleColor), Color.blue(this.particleColor), Color.alpha(this.particleColor));
-		this.particleDef.setFlags(ParticleFlag.viscousParticle | ParticleFlag.staticPressureParticle);
+		this.particleDef.setFlags(ParticleFlag.waterParticle);
 
 		this.addParticles();
 	}
@@ -550,8 +553,8 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 			float x =  minX + this.random.nextFloat() * (maxX - minX);
 			float y = this.liquidJarLeftBody.getPositionY();
 			this.particleDef.setPosition(x, y);
-			this.liquidParticleSystem.createParticle(particleDef);
-			this.liquidEntity.addParticle(x, y, this.particleColor, this.particleSize);
+			int particleIndex = this.liquidParticleSystem.createParticle(particleDef);
+			this.liquidEntity.addParticle(particleIndex, x, y, this.particleColor, this.particleSize);
 		}
 	}
 }
