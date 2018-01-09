@@ -2,6 +2,7 @@ package ch.shibastudio.glcheckuptest.renderers;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.SurfaceTexture;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 import android.support.annotation.NonNull;
@@ -45,6 +46,7 @@ import static android.opengl.Matrix.orthoM;
 import static android.opengl.Matrix.scaleM;
 import static android.opengl.Matrix.setIdentityM;
 import static android.opengl.Matrix.translateM;
+import static ch.shibastudio.glcheckuptest.CheckupConstants.INPUT_PIPE_CENTER_X;
 import static ch.shibastudio.glcheckuptest.CheckupConstants.PARTICLE_SIZE_WORLD;
 
 /**
@@ -135,9 +137,14 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 	private ByteBuffer colorBuffer = ByteBuffer.allocateDirect(MAX_PARTICLES * PARTICLE_COLOR_COUNT).order(ByteOrder.nativeOrder());
 	private ByteBuffer velocityBuffer = ByteBuffer.allocateDirect(MAX_PARTICLES * PARTICLE_VELOCITY_COUNT  * OpenGLUtils.BYTE_PER_FLOAT).order(ByteOrder.nativeOrder());
 	private List<Integer> indexesToDelete = new ArrayList<>();
+	private boolean[] indexToDelete = new boolean[MAX_PARTICLES];
+
 
 	private long lastTargetBlinkTime;
 	private boolean isInTarget = false;
+
+	private float inputLeft;
+	private float inputRight;
 
 	public CheckupTextureRenderer(@NonNull Context context){
 		this.context = context;
@@ -148,8 +155,8 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 		this.world = new World(0f, -WORLD_TOP);
 
 		if(USE_LIQUID){
-			this.liquidShaderProgram = new LiquidShaderProgram(this.context);
-			this.liquidEntity = new LiquidEntity(MAX_PARTICLES);
+//			this.liquidShaderProgram = new LiquidShaderProgram(this.context);
+//			this.liquidEntity = new LiquidEntity(MAX_PARTICLES);
 		}
 
 		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
@@ -170,16 +177,19 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 		this.targetGuideRectEntity = new TargetGuideRectEntity(0.0f, 0.0f, this.getOpenGLDimension(HOLE_W*deltaXW), this.getOpenGLDimension(1.2f*GROUND_H * deltaYW));
 		this.targetGuideArrowEntity = new TargetGuideArrowEntity(0.0f, 0.0f, this.getOpenGLDimension(TARGET_ARROW_W * deltaXW), this.getOpenGLDimension(TARGET_ARROW_H * deltaYW));
 
+		this.inputLeft = this.worldDescriptor.getLeft() + deltaXW * (INPUT_PIPE_CENTER_X - CheckupConstants.INPUT_PIPE_WIDTH/2f);
+		this.inputRight = this.worldDescriptor.getLeft() + deltaXW * (INPUT_PIPE_CENTER_X + CheckupConstants.INPUT_PIPE_WIDTH/2f);
+
 		// 2 x (glDeltaH) x particlesRadius / worldH x pixelH
 		this.particleSize = 2f * 2f * PARTICLE_SIZE_WORLD / WORLD_HEIGHT * super.getHeight();
 
 		this.createWalls();
 		this.createGround();
-		this.createJar();
+//		this.createJar();
 
-		if(USE_LIQUID){
-			this.createLiquid();
-		}
+//		if(USE_LIQUID){
+//			this.createLiquid();
+//		}
 
 		Matrix.setLookAtM(this.viewMatrix, 0, 0, 0, 3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
 		Matrix.multiplyMM(this.modelViewProjectionMatrix, 0, this.projectionMatrix, 0, this.viewMatrix, 0);
@@ -216,10 +226,10 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 			this.world.step(TIME_STEP, VELOCITY_ITERATION, POSITION_ITERATION, PARTICLE_ITERATION);
 			this.updatePositions();
 
-			if(USE_LIQUID){
-				// Add random drops
-				this.addParticles();
-			}
+//			if(USE_LIQUID){
+//				// Add random drops
+//				this.addParticles();
+//			}
 		}
 
 		// Render
@@ -232,12 +242,12 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 			this.targetGuideRectEntity.setState(this.isInTarget);
 		}
 
-		if(USE_LIQUID){
-			this.liquidShaderProgram.useProgram();
-			this.liquidShaderProgram.setUniforms(this.viewProjectionMatrix2);
-			this.liquidEntity.bindData(this.liquidShaderProgram);
-			this.liquidEntity.draw();
-		}
+//		if(USE_LIQUID){
+//			this.liquidShaderProgram.useProgram();
+//			this.liquidShaderProgram.setUniforms(this.viewProjectionMatrix2);
+//			this.liquidEntity.bindData(this.liquidShaderProgram);
+//			this.liquidEntity.draw();
+//		}
 
 		this.wall1Entity.render(this.modelViewProjectionMatrix);
 		this.wall2Entity.render(this.modelViewProjectionMatrix);
@@ -245,9 +255,6 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 		this.groundRightEntity.render(this.modelViewProjectionMatrix);
 		this.targetGuideRectEntity.render(this.modelViewProjectionMatrix);
 		this.targetGuideArrowEntity.render(this.modelViewProjectionMatrix);
-
-		//this.liquidJarLeftEntity.render(this.modelViewProjectionMatrix);
-		//this.liquidJarRightEntity.render(this.modelViewProjectionMatrix);
 
 		this.inputPipeEntity.render(this.modelViewProjectionMatrix);
 
@@ -340,6 +347,12 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 
 		this.updateObjectPosition(this.wall1Entity, this.wall1Body);
 		this.updateObjectPosition(this.wall2Entity, this.wall2Body);
+
+		wall1FixtureDef.delete();
+		wall1Shape.delete();
+		wall2FixtureDef.delete();
+		wall2Shape.delete();
+		bodyDef.delete();
 	}
 
 	/**
@@ -360,7 +373,9 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 				OpenGLUtils.getOpenGLDimension(groundH, deltaYW)
 		);
 
-		this.groundLeftEntity.createBody(this.world, this.worldDescriptor, new Vec2(this.worldDescriptor.getLeft(), groundY));
+		Vec2 leftPos = new Vec2(this.worldDescriptor.getLeft(), groundY);
+		this.groundLeftEntity.createBody(this.world, this.worldDescriptor, leftPos);
+		leftPos.delete();
 
 		// Right ground
 		this.groundRightEntity = new GroundRightEntity(
@@ -370,7 +385,9 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 				OpenGLUtils.getOpenGLDimension(groundH, deltaYW)
 		);
 
-		this.groundRightEntity.createBody(this.world, this.worldDescriptor, new Vec2(this.worldDescriptor.getRight(), groundY));
+		Vec2 rightPos = new Vec2(this.worldDescriptor.getRight(), groundY);
+		this.groundRightEntity.createBody(this.world, this.worldDescriptor, rightPos);
+		rightPos.delete();
 	}
 
 	/**
@@ -512,20 +529,21 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 		this.groundLeftEntity.updateEntity(deltaYW);
 		this.groundRightEntity.updateEntity(deltaYW);
 
-		if(USE_LIQUID){
+/*		if(USE_LIQUID){
 			// Update the particles to display.
 			this.liquidParticleSystem.copyPositionBuffer(0, this.liquidEntity.getParticleCount(), this.posBuffer);
 			this.liquidParticleSystem.copyColorBuffer(0, this.liquidEntity.getParticleCount(), this.colorBuffer);
 			this.liquidParticleSystem.copyVelocityBuffer(this.velocityBuffer);
-			this.liquidEntity.updateParticles(this.posBuffer, this.colorBuffer, this.velocityBuffer, this.indexesToDelete);
+			this.liquidEntity.updateParticles(this.posBuffer, this.colorBuffer, this.velocityBuffer, this.indexToDelete);
 
-			if(!indexesToDelete.isEmpty()){
-				for(Integer index : indexesToDelete){
-					this.liquidParticleSystem.destroyParticle(index);
+			for(int i=0; i<this.indexToDelete.length; i++){
+				if(this.indexToDelete[i]){
+					this.liquidParticleSystem.destroyParticle(i);
+					this.indexToDelete[i] = false;
 				}
 			}
 		}
-	}
+*/	}
 
 	/**
 	 * Gets the target ratio for the current level.
@@ -542,19 +560,31 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 		return -1f;
 	}
 
+	/**
+	 * Adds some particles.
+	 */
 	private void addParticles(){
-		float minX = this.liquidJarLeftBody.getPositionX() + 0.02f;
-		float maxX = this.liquidJarRightBody.getPositionX() - 0.02f;
+		float minX = this.inputLeft;//this.liquidJarLeftBody.getPositionX() + 0.02f;
+		float maxX = this.inputRight;//this.liquidJarRightBody.getPositionX() - 0.02f;
 
 		int freeParticlecount = this.liquidParticleSystem.getMaxParticleCount() - this.liquidParticleSystem.getParticleCount();
 		int particlesToCreate = Math.min(freeParticlecount, NEW_PARTICLE_COUNT);
 
 		for(int i=0; i<particlesToCreate; i++){
-			float x =  minX + this.random.nextFloat() * (maxX - minX);
+			float x = minX + this.random.nextFloat() * (maxX - minX);
 			float y = this.liquidJarLeftBody.getPositionY();
 			this.particleDef.setPosition(x, y);
 			int particleIndex = this.liquidParticleSystem.createParticle(particleDef);
 			this.liquidEntity.addParticle(particleIndex, x, y, this.particleColor, this.particleSize);
 		}
+	}
+
+	@Override
+	public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+		super.onSurfaceTextureDestroyed(surface);
+
+		this.world.delete();
+
+		return true;
 	}
 }

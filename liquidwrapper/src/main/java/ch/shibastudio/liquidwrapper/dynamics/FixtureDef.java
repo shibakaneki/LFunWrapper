@@ -1,6 +1,7 @@
 package ch.shibastudio.liquidwrapper.dynamics;
 
 import ch.shibastudio.liquidwrapper.AbstractNativeObject;
+import ch.shibastudio.liquidwrapper.DebugUtils;
 import ch.shibastudio.liquidwrapper.LiquidWrapperJNI;
 import ch.shibastudio.liquidwrapper.collision.shapes.ChainShape;
 import ch.shibastudio.liquidwrapper.collision.shapes.CircleShape;
@@ -17,11 +18,13 @@ import ch.shibastudio.liquidwrapper.collision.shapes.ShapeUtils;
 public class FixtureDef extends AbstractNativeObject{
 	public FixtureDef(){
 		super(LiquidWrapperJNI.FixtureDef_new());
+		DebugUtils.logNew(getClass().getSimpleName(), super.getPtr());
 	}
 
 	@Override
 	public synchronized void delete(){
 		if (super.getPtr() != 0) {
+			DebugUtils.logDelete(getClass().getSimpleName(), super.getPtr());
 			LiquidWrapperJNI.FixtureDef_delete(super.getPtr());
 			super.deletePtr();
 		}

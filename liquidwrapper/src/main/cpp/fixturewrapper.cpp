@@ -11,7 +11,9 @@ JNIEXPORT void JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Fixtur
         jlong ptr){
 
     b2Fixture* pFixture = (b2Fixture*)ptr;
-    delete pFixture;
+    if(pFixture){
+        delete pFixture;
+    }
 }
 
 JNIEXPORT jint JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Fixture_1getType(

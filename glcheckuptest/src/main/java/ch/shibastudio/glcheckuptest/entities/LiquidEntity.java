@@ -98,9 +98,7 @@ public class LiquidEntity {
      * @param colorBuffer as the color buffer.
      * @param velocityBuffer as the velocity buffer.
      */
-    public void updateParticles(ByteBuffer positionBuffer, ByteBuffer colorBuffer, ByteBuffer velocityBuffer, List<Integer> indexesToDelete){
-
-        indexesToDelete.clear();
+    public void updateParticles(ByteBuffer positionBuffer, ByteBuffer colorBuffer, ByteBuffer velocityBuffer, boolean[] indexToDelete){
 
         // x0, y0, x1, y1, ...,xn-1, yn-1
         FloatBuffer posBuffer = positionBuffer.asFloatBuffer();
@@ -137,7 +135,7 @@ public class LiquidEntity {
             offset++;
 
             if(isToBeDeleted){
-                indexesToDelete.add(n);
+                indexToDelete[n] = true;
             }
         }
 

@@ -90,6 +90,12 @@ public class GroundRightEntity extends AbstractBodyEntity {
 		angleFixtureDef.setFriction(FRICTION);
 		this.angleBody.createFixture(angleFixtureDef);
 
+		angleShape.delete();
+		angleFixtureDef.delete();
+		topFixtureDef.delete();
+		topShape.delete();
+		bodyDef.delete();
+
 		return this.topBody;
 	}
 

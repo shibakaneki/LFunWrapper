@@ -2,6 +2,8 @@ package ch.shibastudio.liquidwrapper;
 
 import android.util.Log;
 
+import static ch.shibastudio.liquidwrapper.DebugUtils.MEMLEAK_DEBUG;
+
 /**
  * Created by shibakaneki on 04.12.17.
  */
@@ -17,6 +19,7 @@ public abstract class AbstractNativeObject {
 	 * Finalizes the object.
 	 */
 	protected void finalize(){
+		Log.w(MEMLEAK_DEBUG, getClass().getName() +" finalize() : " +cPtr);
 		this.delete();
 	}
 

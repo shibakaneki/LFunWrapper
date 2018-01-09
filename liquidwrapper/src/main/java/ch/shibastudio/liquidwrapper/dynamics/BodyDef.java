@@ -1,7 +1,5 @@
 package ch.shibastudio.liquidwrapper.dynamics;
 
-import android.util.Log;
-
 import ch.shibastudio.liquidwrapper.AbstractNativeObject;
 import ch.shibastudio.liquidwrapper.DebugUtils;
 import ch.shibastudio.liquidwrapper.LiquidWrapperJNI;
@@ -14,13 +12,13 @@ import ch.shibastudio.liquidwrapper.common.Vec2;
 public class BodyDef extends AbstractNativeObject {
 	public BodyDef(){
 		super(LiquidWrapperJNI.BodyDef_new());
-		Log.d(DebugUtils.LOG_TAG, "BodyDef (" +super.getPtr() +")");
+		DebugUtils.logNew(getClass().getSimpleName(), super.getPtr());
 	}
 
 	@Override
 	public synchronized void delete(){
 		if (super.getPtr() != 0) {
-			Log.d(DebugUtils.LOG_TAG, "delete BodyDef (" +super.getPtr() +")");
+			DebugUtils.logDelete(getClass().getSimpleName(), super.getPtr());
 			LiquidWrapperJNI.BodyDef_delete(super.getPtr());
 			super.deletePtr();
 		}

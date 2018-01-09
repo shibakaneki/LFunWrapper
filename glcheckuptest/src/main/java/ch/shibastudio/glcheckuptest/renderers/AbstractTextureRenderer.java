@@ -147,21 +147,21 @@ public abstract class AbstractTextureRenderer implements ITextureRenderer, Textu
 				if (!this.egl.eglSwapBuffers(this.eglDisplay, this.eglSurface)) {
 					Log.e(LOG_TAG, "Cannot swap buffers");
 					//throw new RuntimeException("Cannot swap buffers");
-				}
-
-				long t1 = System.currentTimeMillis();
-				long dt = t1 - t0;
-
-				if(dt < this.targetFpsDelay){
-					long timeToWait = this.targetFpsDelay - dt;
-					// Sleep
-					try {
-						Thread.sleep(timeToWait);
-					} catch (InterruptedException e) {
-						// Ignore
-					}
 				}else{
-					this.textureRenderer.notifySlowRendering(dt - this.targetFpsDelay);
+					long t1 = System.currentTimeMillis();
+					long dt = t1 - t0;
+
+					if(dt < this.targetFpsDelay){
+						long timeToWait = this.targetFpsDelay - dt;
+						// Sleep
+						try {
+							Thread.sleep(timeToWait);
+						} catch (InterruptedException e) {
+							// Ignore
+						}
+					}else{
+						this.textureRenderer.notifySlowRendering(dt - this.targetFpsDelay);
+					}
 				}
 			}
 

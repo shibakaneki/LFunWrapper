@@ -1,5 +1,7 @@
 package ch.shibastudio.liquidwrapper.collision.shapes;
 
+
+import ch.shibastudio.liquidwrapper.DebugUtils;
 import ch.shibastudio.liquidwrapper.LiquidWrapperJNI;
 import ch.shibastudio.liquidwrapper.common.Vec2;
 
@@ -10,6 +12,7 @@ import ch.shibastudio.liquidwrapper.common.Vec2;
 public class PolygonShape extends Shape{
 	public PolygonShape(){
 		super(LiquidWrapperJNI.PolygonShape_new());
+		DebugUtils.logNew(getClass().getSimpleName(), super.getPtr());
 	}
 
 	public PolygonShape(long ptr){
@@ -19,6 +22,7 @@ public class PolygonShape extends Shape{
 	@Override
 	public synchronized void delete(){
 		if (super.getPtr() != 0) {
+			DebugUtils.logDelete(getClass().getSimpleName(), super.getPtr());
 			LiquidWrapperJNI.PolygonShape_delete(super.getPtr());
 			super.deletePtr();
 		}

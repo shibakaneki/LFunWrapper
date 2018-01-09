@@ -411,7 +411,7 @@ public class CheckupRenderer implements GLSurfaceView.Renderer {
 				this.liquidParticleSystem.copyColorBuffer(0, this.liquidEntity.getParticleCount(), colorBuffer);
 				this.liquidParticleSystem.copyVelocityBuffer(veloBuffer);
 
-				this.liquidEntity.updateParticles(posBuffer, colorBuffer, veloBuffer, new ArrayList<Integer>());
+				this.liquidEntity.updateParticles(posBuffer, colorBuffer, veloBuffer, new boolean[MAX_PARTICLES]);
 
 				break;
 		}

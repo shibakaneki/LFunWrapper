@@ -22,7 +22,9 @@ public class Fixture extends AbstractNativeObject{
 	@Override
 	public synchronized void delete(){
 		if (super.getPtr() != 0) {
-			LiquidWrapperJNI.Fixture_delete(super.getPtr());
+			// NOTE: 	The fixtures are automatically destroyed when the Body is destroyed.
+			//			This is managed by the World when it destroys the bodies.
+			//LiquidWrapperJNI.Fixture_delete(super.getPtr());
 			super.deletePtr();
 		}
 	}
