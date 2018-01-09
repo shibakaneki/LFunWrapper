@@ -19,7 +19,6 @@ public abstract class AbstractNativeObject {
 	 * Finalizes the object.
 	 */
 	protected void finalize(){
-		Log.w(MEMLEAK_DEBUG, getClass().getName() +" finalize() : " +cPtr);
 		this.delete();
 	}
 

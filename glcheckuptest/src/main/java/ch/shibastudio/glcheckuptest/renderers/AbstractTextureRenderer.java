@@ -107,6 +107,7 @@ public abstract class AbstractTextureRenderer implements ITextureRenderer, Textu
 		private long targetFpsDelay = 2000l;
 		private boolean isRunning = true;
 		private boolean isRenderingInitialized = false;
+		private boolean isCurrentContextSet = false;
 
 		public RenderThread(SurfaceTexture surface, @NonNull ITextureRenderer renderer){
 			this.surface = surface;
@@ -142,6 +143,12 @@ public abstract class AbstractTextureRenderer implements ITextureRenderer, Textu
 				}
 
 				this.textureRenderer.render();
+
+				// We verify if the system didn't stop the render thread before swapping the buffers.
+				// If so, we have to stop the rendering to avoid accessing unavailable buffers.
+				if(!this.isRunning){
+					break;
+				}
 
 				// swap the buffers
 				if (!this.egl.eglSwapBuffers(this.eglDisplay, this.eglSurface)) {
@@ -208,6 +215,8 @@ public abstract class AbstractTextureRenderer implements ITextureRenderer, Textu
 				throw new RuntimeException("eglMakeCurrent failed " + GLUtils.getEGLErrorString(this.egl.eglGetError()));
 			}
 
+			this.isCurrentContextSet = true;
+
 			this.gl = this.eglContext.getGL();
 		}
 
@@ -216,7 +225,8 @@ public abstract class AbstractTextureRenderer implements ITextureRenderer, Textu
 		 */
 		private void checkCurrent() {
 			if (!this.eglContext.equals(this.egl.eglGetCurrentContext()) || !this.eglSurface.equals(this.egl.eglGetCurrentSurface(EGL10.EGL_DRAW))) {
-				if (!this.egl.eglMakeCurrent(this.eglDisplay, this.eglSurface, this.eglSurface, this.eglContext)) {
+				//if (!this.egl.eglMakeCurrent(this.eglDisplay, this.eglSurface, this.eglSurface, this.eglContext)) {
+				if(!this.isCurrentContextSet){
 					throw new RuntimeException("eglMakeCurrent failed " + GLUtils.getEGLErrorString(this.egl.eglGetError()));
 				}
 			}
@@ -240,6 +250,10 @@ public abstract class AbstractTextureRenderer implements ITextureRenderer, Textu
 		private void finishGL(){
 			this.egl.eglDestroyContext(this.eglDisplay, this.eglContext);
 			this.egl.eglDestroySurface(this.eglDisplay, this.eglSurface);
+
+			if (!this.egl.eglMakeCurrent(this.eglDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT)) {
+				throw new RuntimeException("eglMakeCurrent failed " + GLUtils.getEGLErrorString(this.egl.eglGetError()));
+			}
 		}
 
 		/**
