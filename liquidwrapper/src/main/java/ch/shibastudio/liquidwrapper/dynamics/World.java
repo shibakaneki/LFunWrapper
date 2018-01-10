@@ -68,6 +68,14 @@ public class World extends AbstractNativeObject{
 	}
 
 	/**
+	 * Destroy a particle system.
+	 * @param particleSystem as the given particle system.
+	 */
+	public void destroyParticleSystem(ParticleSystem particleSystem){
+		LiquidWrapperJNI.World_destroyParticleSystem(super.getPtr(), particleSystem.getPtr());
+	}
+
+	/**
 	 * Gets the gravity vector.
 	 * @return the gravity vector.
 	 */

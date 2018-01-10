@@ -6,6 +6,7 @@ import android.graphics.SurfaceTexture;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -16,7 +17,6 @@ import java.util.Random;
 import ch.shibastudio.glcheckuptest.CheckupConstants;
 import ch.shibastudio.glcheckuptest.WorldDescriptor;
 import ch.shibastudio.glcheckuptest.entities.AbstractEntity;
-import ch.shibastudio.glcheckuptest.entities.CheckupBall;
 import ch.shibastudio.glcheckuptest.entities.GroundLeftEntity;
 import ch.shibastudio.glcheckuptest.entities.GroundRightEntity;
 import ch.shibastudio.glcheckuptest.entities.InputPipeEntity;
@@ -24,9 +24,9 @@ import ch.shibastudio.glcheckuptest.entities.LiquidEntity;
 import ch.shibastudio.glcheckuptest.entities.RectEntity;
 import ch.shibastudio.glcheckuptest.entities.TargetGuideArrowEntity;
 import ch.shibastudio.glcheckuptest.entities.TargetGuideRectEntity;
-import ch.shibastudio.glcheckuptest.geometry.Point;
 import ch.shibastudio.glcheckuptest.programs.LiquidShaderProgram;
 import ch.shibastudio.glcheckuptest.utils.OpenGLUtils;
+import ch.shibastudio.liquidwrapper.DebugUtils;
 import ch.shibastudio.liquidwrapper.collision.shapes.PolygonShape;
 import ch.shibastudio.liquidwrapper.common.Vec2;
 import ch.shibastudio.liquidwrapper.dynamics.Body;
@@ -155,8 +155,8 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 		this.world = new World(0f, -WORLD_TOP);
 
 		if(USE_LIQUID){
-//			this.liquidShaderProgram = new LiquidShaderProgram(this.context);
-//			this.liquidEntity = new LiquidEntity(MAX_PARTICLES);
+			this.liquidShaderProgram = new LiquidShaderProgram(this.context);
+			this.liquidEntity = new LiquidEntity(MAX_PARTICLES);
 		}
 
 		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
@@ -187,9 +187,9 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 		this.createGround();
 //		this.createJar();
 
-//		if(USE_LIQUID){
-//			this.createLiquid();
-//		}
+		if(USE_LIQUID){
+			this.createLiquid();
+		}
 
 		Matrix.setLookAtM(this.viewMatrix, 0, 0, 0, 3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
 		Matrix.multiplyMM(this.modelViewProjectionMatrix, 0, this.projectionMatrix, 0, this.viewMatrix, 0);
@@ -226,10 +226,10 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 			this.world.step(TIME_STEP, VELOCITY_ITERATION, POSITION_ITERATION, PARTICLE_ITERATION);
 			this.updatePositions();
 
-//			if(USE_LIQUID){
-//				// Add random drops
-//				this.addParticles();
-//			}
+			if(USE_LIQUID){
+				// Add random drops
+				this.addParticles();
+			}
 		}
 
 		// Render
@@ -242,12 +242,12 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 			this.targetGuideRectEntity.setState(this.isInTarget);
 		}
 
-//		if(USE_LIQUID){
-//			this.liquidShaderProgram.useProgram();
-//			this.liquidShaderProgram.setUniforms(this.viewProjectionMatrix2);
-//			this.liquidEntity.bindData(this.liquidShaderProgram);
-//			this.liquidEntity.draw();
-//		}
+		if(USE_LIQUID){
+			this.liquidShaderProgram.useProgram();
+			this.liquidShaderProgram.setUniforms(this.viewProjectionMatrix2);
+			this.liquidEntity.bindData(this.liquidShaderProgram);
+			this.liquidEntity.draw();
+		}
 
 		this.wall1Entity.render(this.modelViewProjectionMatrix);
 		this.wall2Entity.render(this.modelViewProjectionMatrix);
@@ -468,6 +468,8 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 		this.particleDef.setFlags(ParticleFlag.waterParticle);
 
 		this.addParticles();
+
+		particleSystemDef.delete();
 	}
 
 	/**
@@ -529,7 +531,7 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 		this.groundLeftEntity.updateEntity(deltaYW);
 		this.groundRightEntity.updateEntity(deltaYW);
 
-/*		if(USE_LIQUID){
+		if(USE_LIQUID){
 			// Update the particles to display.
 			this.liquidParticleSystem.copyPositionBuffer(0, this.liquidEntity.getParticleCount(), this.posBuffer);
 			this.liquidParticleSystem.copyColorBuffer(0, this.liquidEntity.getParticleCount(), this.colorBuffer);
@@ -543,7 +545,7 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 				}
 			}
 		}
-*/	}
+	}
 
 	/**
 	 * Gets the target ratio for the current level.
@@ -564,18 +566,24 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 	 * Adds some particles.
 	 */
 	private void addParticles(){
-		float minX = this.inputLeft;//this.liquidJarLeftBody.getPositionX() + 0.02f;
-		float maxX = this.inputRight;//this.liquidJarRightBody.getPositionX() - 0.02f;
+		synchronized (this){
 
-		int freeParticlecount = this.liquidParticleSystem.getMaxParticleCount() - this.liquidParticleSystem.getParticleCount();
-		int particlesToCreate = Math.min(freeParticlecount, NEW_PARTICLE_COUNT);
+			if(null == this.particleDef || this.particleDef.getPtr() == 0)
+				return;
 
-		for(int i=0; i<particlesToCreate; i++){
-			float x = minX + this.random.nextFloat() * (maxX - minX);
-			float y = this.liquidJarLeftBody.getPositionY();
-			this.particleDef.setPosition(x, y);
-			int particleIndex = this.liquidParticleSystem.createParticle(particleDef);
-			this.liquidEntity.addParticle(particleIndex, x, y, this.particleColor, this.particleSize);
+			float minX = this.inputLeft;
+			float maxX = this.inputRight;
+
+			int freeParticlecount = this.liquidParticleSystem.getMaxParticleCount() - this.liquidParticleSystem.getParticleCount();
+			int particlesToCreate = Math.min(freeParticlecount, NEW_PARTICLE_COUNT);
+
+			for(int i=0; i<particlesToCreate; i++){
+				float x = minX + this.random.nextFloat() * (maxX - minX);
+				float y = 11;
+				this.particleDef.setPosition(x, y);
+				int particleIndex = this.liquidParticleSystem.createParticle(particleDef);
+				this.liquidEntity.addParticle(particleIndex, x, y, this.particleColor, this.particleSize);
+			}
 		}
 	}
 
@@ -583,7 +591,11 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 	public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
 		super.onSurfaceTextureDestroyed(surface);
 
-		this.world.delete();
+		synchronized (this){
+			this.particleDef.delete();
+			this.world.destroyParticleSystem(this.liquidParticleSystem);
+			this.world.delete();
+		}
 
 		return true;
 	}
