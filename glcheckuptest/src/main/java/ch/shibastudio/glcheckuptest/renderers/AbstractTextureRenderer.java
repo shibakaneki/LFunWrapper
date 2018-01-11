@@ -94,6 +94,7 @@ public abstract class AbstractTextureRenderer implements ITextureRenderer, Textu
 	}
 
 	private static class RenderThread extends Thread{
+		private final static String THREAD_NAME = "Texture Render Thread";
 		private SurfaceTexture surface;
 
 		private EGL10 egl;
@@ -110,6 +111,7 @@ public abstract class AbstractTextureRenderer implements ITextureRenderer, Textu
 		private boolean isCurrentContextSet = false;
 
 		public RenderThread(SurfaceTexture surface, @NonNull ITextureRenderer renderer){
+			setName(THREAD_NAME);
 			this.surface = surface;
 			this.textureRenderer = renderer;
 		}

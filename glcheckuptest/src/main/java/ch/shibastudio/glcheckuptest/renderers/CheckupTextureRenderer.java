@@ -26,7 +26,6 @@ import ch.shibastudio.glcheckuptest.entities.TargetGuideArrowEntity;
 import ch.shibastudio.glcheckuptest.entities.TargetGuideRectEntity;
 import ch.shibastudio.glcheckuptest.programs.LiquidShaderProgram;
 import ch.shibastudio.glcheckuptest.utils.OpenGLUtils;
-import ch.shibastudio.liquidwrapper.DebugUtils;
 import ch.shibastudio.liquidwrapper.collision.shapes.PolygonShape;
 import ch.shibastudio.liquidwrapper.common.Vec2;
 import ch.shibastudio.liquidwrapper.dynamics.Body;
@@ -63,8 +62,8 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 	private final static float WORLD_TOP = 10f;
 	private final static float WORLD_BOTTOM = 0f;
 	private final static float WORLD_HEIGHT = WORLD_TOP - WORLD_BOTTOM;
-	private final static int MAX_PARTICLES = 100000;//1000;//000;
-	private final static int NEW_PARTICLE_COUNT = 7;//4;
+	private final static int MAX_PARTICLES = 100000;
+	private final static int NEW_PARTICLE_COUNT = 7;
 	private final static float GROUND_Y = 538f/640f;
 	private final static float GROUND_H = 20f/640f;
 	private final static float HOLE_W = 50f/360f;
