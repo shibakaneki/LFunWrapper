@@ -2,7 +2,6 @@ package ch.shibastudio.glcheckuptest;
 
 import android.app.Application;
 
-import com.squareup.leakcanary.LeakCanary;
 
 /**
  * Created by shibakaneki on 14.12.17.
