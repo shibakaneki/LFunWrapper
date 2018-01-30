@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Random;
 
 import ch.shibastudio.glcheckuptest.CheckupConstants;
+import ch.shibastudio.glcheckuptest.R;
 import ch.shibastudio.glcheckuptest.WorldDescriptor;
 import ch.shibastudio.glcheckuptest.entities.AbstractEntity;
 import ch.shibastudio.glcheckuptest.entities.GroundLeftEntity;
@@ -24,8 +25,11 @@ import ch.shibastudio.glcheckuptest.entities.LiquidEntity;
 import ch.shibastudio.glcheckuptest.entities.RectEntity;
 import ch.shibastudio.glcheckuptest.entities.TargetGuideArrowEntity;
 import ch.shibastudio.glcheckuptest.entities.TargetGuideRectEntity;
+import ch.shibastudio.glcheckuptest.programs.IShaderProgram;
 import ch.shibastudio.glcheckuptest.programs.LiquidShaderProgram;
+import ch.shibastudio.glcheckuptest.programs.LiquidTextureShaderProgram;
 import ch.shibastudio.glcheckuptest.utils.OpenGLUtils;
+import ch.shibastudio.glcheckuptest.utils.TextureHelper;
 import ch.shibastudio.liquidwrapper.collision.shapes.PolygonShape;
 import ch.shibastudio.liquidwrapper.common.Vec2;
 import ch.shibastudio.liquidwrapper.dynamics.Body;
@@ -46,6 +50,8 @@ import static android.opengl.Matrix.scaleM;
 import static android.opengl.Matrix.setIdentityM;
 import static android.opengl.Matrix.translateM;
 import static ch.shibastudio.glcheckuptest.CheckupConstants.INPUT_PIPE_CENTER_X;
+import static ch.shibastudio.glcheckuptest.CheckupConstants.INPUT_PIPE_HEIGHT;
+import static ch.shibastudio.glcheckuptest.CheckupConstants.INPUT_PIPE_WIDTH;
 import static ch.shibastudio.glcheckuptest.CheckupConstants.PARTICLE_SIZE_WORLD;
 
 /**
@@ -53,36 +59,41 @@ import static ch.shibastudio.glcheckuptest.CheckupConstants.PARTICLE_SIZE_WORLD;
  */
 
 public class CheckupTextureRenderer extends AbstractTextureRenderer {
+	private final static boolean USES_TEXTURE = false;
+
 	private final static long TARGET_BLINK = 500;
 
 	private final static boolean USE_LIQUID = true;
-	private final static float EARTH_GRAVITY = 9.81f;
+	private final static float EARTH_GRAVITY = 20f;//9.81f;
 	private final static float WATER_DENSITY = 998.2071f; //  20°C
+	private final static float WALL_DENSITY = 1.0f;
+	private final static float WALL_FRICTION = 1.0f;
+	private final static float WALL_RESTITUTION = 0.2f;
 
-	private final static float WORLD_TOP = 10f;
+	private final static float WORLD_TOP = 100f;
 	private final static float WORLD_BOTTOM = 0f;
 	private final static float WORLD_HEIGHT = WORLD_TOP - WORLD_BOTTOM;
 	private final static int MAX_PARTICLES = 100000;
-	private final static int NEW_PARTICLE_COUNT = 7;
+	private final static int NEW_PARTICLE_COUNT = 20;
 	private final static float GROUND_Y = 538f/640f;
 	private final static float GROUND_H = 20f/640f;
 	private final static float HOLE_W = 50f/360f;
 	private final static float GROUND_W = 310f/360f;
 	private final static float TARGET_ARROW_W = 39f/360f;
 	private final static float TARGET_ARROW_H = 53f/640f;
-	private final static float WALL1_X = 157f/360f;
-	private final static float WALL1_Y = 208f/640f;
+	private final static float WALL1_X = 140f/360f;
+	private final static float WALL1_Y = 228f/640f;
 	private final static float WALL1_W = 176f/360f;
 	private final static float WALL1_H = 20f/640f;
-	private final static float WALL2_X = 300f/360f;//277f/360f;
+	private final static float WALL2_X = 340f/360f;
 	private final static float WALL2_Y = 375f/640f;
 	private final static float WALL2_W = 200f/360f; //270f/360f;
 	private final static float WALL2_H = 20f/640f;
 	private final static int FPS = 30;
 	private final static float TIME_STEP = 1.0f / (float)FPS;
-	private final static int VELOCITY_ITERATION = 1;
-	private final static int POSITION_ITERATION = 1;
-	private final static int PARTICLE_ITERATION = 1;
+	private final static int VELOCITY_ITERATION = 5;
+	private final static int POSITION_ITERATION = 2;
+	private final static int PARTICLE_ITERATION = 3;
 	private final int PARTICLE_COORD_COUNT = 2;
 	private final int PARTICLE_VELOCITY_COUNT = 2;
 	private final int PARTICLE_COLOR_COUNT = 4;
@@ -114,7 +125,7 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 	private LiquidEntity liquidEntity;
 	private LiquidShaderProgram liquidShaderProgram;
 	private ParticleDef particleDef;
-	int particleColor = Color.argb(170, 0, 172, 231);
+	int particleColor = Color.argb(100, 0, 172, 231);
 
 	private ParticleSystem liquidParticleSystem;
 	private InputPipeEntity inputPipeEntity;
@@ -126,18 +137,18 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 	private Body wall2Body;
 	private Body liquidJarLeftBody;
 	private Body liquidJarRightBody;
+	private Body liquidJarTopBody;
 	private GroundLeftEntity groundLeftEntity;
 	private GroundRightEntity groundRightEntity;
-	private RectEntity liquidJarLeftEntity;
-	private RectEntity liquidJarRightEntity;
+//	private RectEntity liquidJarLeftEntity;
+//	private RectEntity liquidJarRightEntity;
+//	private RectEntity liquidJarTopEntity;
 
 	private Random random = new Random();
 	private ByteBuffer posBuffer = ByteBuffer.allocateDirect(MAX_PARTICLES * PARTICLE_COORD_COUNT  * OpenGLUtils.BYTE_PER_FLOAT).order(ByteOrder.nativeOrder());
 	private ByteBuffer colorBuffer = ByteBuffer.allocateDirect(MAX_PARTICLES * PARTICLE_COLOR_COUNT).order(ByteOrder.nativeOrder());
 	private ByteBuffer velocityBuffer = ByteBuffer.allocateDirect(MAX_PARTICLES * PARTICLE_VELOCITY_COUNT  * OpenGLUtils.BYTE_PER_FLOAT).order(ByteOrder.nativeOrder());
-	private List<Integer> indexesToDelete = new ArrayList<>();
 	private boolean[] indexToDelete = new boolean[MAX_PARTICLES];
-
 
 	private long lastTargetBlinkTime;
 	private boolean isInTarget = false;
@@ -145,18 +156,16 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 	private float inputLeft;
 	private float inputRight;
 
+	private int liquidTexture;
+	private IShaderProgram liquidTextureProgram;
+
 	public CheckupTextureRenderer(@NonNull Context context){
 		this.context = context;
 	}
 
 	@Override
 	public void initRendering() {
-		this.world = new World(0f, -WORLD_TOP);
-
-		if(USE_LIQUID){
-			this.liquidShaderProgram = new LiquidShaderProgram(this.context);
-			this.liquidEntity = new LiquidEntity(MAX_PARTICLES);
-		}
+		this.world = new World(0f, -EARTH_GRAVITY);
 
 		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		glViewport(0, 0, super.getWidth(), super.getHeight());
@@ -176,15 +185,15 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 		this.targetGuideRectEntity = new TargetGuideRectEntity(0.0f, 0.0f, this.getOpenGLDimension(HOLE_W*deltaXW), this.getOpenGLDimension(1.2f*GROUND_H * deltaYW));
 		this.targetGuideArrowEntity = new TargetGuideArrowEntity(0.0f, 0.0f, this.getOpenGLDimension(TARGET_ARROW_W * deltaXW), this.getOpenGLDimension(TARGET_ARROW_H * deltaYW));
 
-		this.inputLeft = this.worldDescriptor.getLeft() + deltaXW * (INPUT_PIPE_CENTER_X - CheckupConstants.INPUT_PIPE_WIDTH/2f);
-		this.inputRight = this.worldDescriptor.getLeft() + deltaXW * (INPUT_PIPE_CENTER_X + CheckupConstants.INPUT_PIPE_WIDTH/2f);
+		this.inputLeft = this.worldDescriptor.getLeft() + deltaXW * (INPUT_PIPE_CENTER_X - CheckupConstants.INPUT_PIPE_WIDTH/4f);
+		this.inputRight = this.worldDescriptor.getLeft() + deltaXW * (INPUT_PIPE_CENTER_X + CheckupConstants.INPUT_PIPE_WIDTH/4f);
 
 		// 2 x (glDeltaH) x particlesRadius / worldH x pixelH
 		this.particleSize = 2f * 2f * PARTICLE_SIZE_WORLD / WORLD_HEIGHT * super.getHeight();
 
 		this.createWalls();
 		this.createGround();
-//		this.createJar();
+		this.createJar();
 
 		if(USE_LIQUID){
 			this.createLiquid();
@@ -193,7 +202,7 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 		Matrix.setLookAtM(this.viewMatrix, 0, 0, 0, 3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
 		Matrix.multiplyMM(this.modelViewProjectionMatrix, 0, this.projectionMatrix, 0, this.viewMatrix, 0);
 
-		xWHole = -1.5f;
+		xWHole = -1.8f;
 
 		orthoM(projectionMatrix2, 0, -ratio, ratio, -1f, 1f, -1f, 1f);
 
@@ -207,7 +216,8 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 		setIdentityM(scaleMatrix, 0);
 		setIdentityM(transformationMatrix, 0);
 
-		translateM(translationMatrix, 0, 0f, -5f, 0f);
+		//translateM(translationMatrix, 0, 0f, -5f, 0f);
+		translateM(translationMatrix, 0, 0f, -WORLD_HEIGHT/2f, 0f);
 		scaleM(scaleMatrix, 0, scaleFactor, scaleFactor, 1f);
 		multiplyMM(transformationMatrix, 0, scaleMatrix, 0, translationMatrix, 0);
 
@@ -242,9 +252,14 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 		}
 
 		if(USE_LIQUID){
-			this.liquidShaderProgram.useProgram();
-			this.liquidShaderProgram.setUniforms(this.viewProjectionMatrix2);
-			this.liquidEntity.bindData(this.liquidShaderProgram);
+			this.liquidTextureProgram.useProgram();
+
+			if(USES_TEXTURE){
+				this.liquidTextureProgram.setTexture(this.liquidTexture);
+			}
+
+			this.liquidTextureProgram.setUniforms(this.viewProjectionMatrix2);
+			this.liquidEntity.bindData(this.liquidTextureProgram);
 			this.liquidEntity.draw();
 		}
 
@@ -257,6 +272,9 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 
 		this.inputPipeEntity.render(this.modelViewProjectionMatrix);
 
+//		this.liquidJarTopEntity.render(this.modelViewProjectionMatrix);
+//		this.liquidJarLeftEntity.render(this.modelViewProjectionMatrix);
+//		this.liquidJarRightEntity.render(this.modelViewProjectionMatrix);
 	}
 
 	/**
@@ -312,9 +330,9 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 		wall1Shape.setAsBox(wall1WidthW / 2.0f, wall1HeightW / 2.0f);
 		FixtureDef wall1FixtureDef = new FixtureDef();
 		wall1FixtureDef.setShape(wall1Shape);
-		wall1FixtureDef.setDensity(1.0f);
-		wall1FixtureDef.setFriction(1.0f);
-		wall1FixtureDef.setRestitution(0.2f);
+		wall1FixtureDef.setDensity(WALL_DENSITY);
+		wall1FixtureDef.setFriction(WALL_FRICTION);
+		wall1FixtureDef.setRestitution(WALL_RESTITUTION);
 		this.wall1Body.createFixture(wall1FixtureDef);
 
 		this.wall1Entity = new RectEntity(
@@ -332,9 +350,9 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 		wall2Shape.setAsBox(wall2WidthW / 2.0f, wall2HeightW / 2.0f);
 		FixtureDef wall2FixtureDef = new FixtureDef();
 		wall2FixtureDef.setShape(wall2Shape);
-		wall2FixtureDef.setDensity(1.0f);
-		wall2FixtureDef.setFriction(1.0f);
-		wall2FixtureDef.setRestitution(0.2f);
+		wall2FixtureDef.setDensity(WALL_DENSITY);
+		wall2FixtureDef.setFriction(WALL_FRICTION);
+		wall2FixtureDef.setRestitution(WALL_RESTITUTION);
 		this.wall2Body.createFixture(wall2FixtureDef);
 
 		this.wall2Entity = new RectEntity(
@@ -393,82 +411,138 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 	 * Creates the jar that will be used as the input for the liquid.
 	 */
 	private void createJar(){
+
 		float deltaXW = this.worldDescriptor.getRight() - this.worldDescriptor.getLeft();
 		float deltaYW = this.worldDescriptor.getTop() - this.worldDescriptor.getBottom();
 
-		float widthW = deltaXW;
-		float heightW = 0.01f;
-		float xW = ((CheckupConstants.INPUT_PIPE_CENTER_X - 0.5f - CheckupConstants.INPUT_PIPE_WIDTH/2f) * deltaXW) - (float)(widthW * Math.cos(Math.toRadians(-45d)))/2f;
-		float yW = this.worldDescriptor.getTop() + (float)(widthW * Math.sin(Math.toRadians(45d)))/2f - 0.5f;
+		float angle = 90f + 30f;
+		float angleRight = 90f - 30f;
+		float angleRad = (float)Math.toRadians(angle - 90f);
+		float angleCos = (float)Math.cos(angleRad);
+		float angleSin = (float)Math.sin(angleRad);
+		float length = 2f * INPUT_PIPE_HEIGHT / angleCos;
+		float y = WORLD_TOP;
+		float yTop = y + INPUT_PIPE_HEIGHT * deltaXW;
 
-		// Jar Left
+		// Left
+		float xLeft = this.worldDescriptor.getLeft() + (INPUT_PIPE_CENTER_X - 0.5f*INPUT_PIPE_WIDTH - (INPUT_PIPE_HEIGHT * (float)Math.tan(angleRad))) * deltaXW;
+
+		// Right
+		float xRight = this.worldDescriptor.getLeft() + (INPUT_PIPE_CENTER_X + 0.5f*INPUT_PIPE_WIDTH + INPUT_PIPE_HEIGHT * (float)Math.tan(angleRad)) * deltaXW;
+
+		// Top
+		float xTop = this.worldDescriptor.getLeft() + INPUT_PIPE_CENTER_X * deltaXW;
+
+		float widthW = deltaXW;
+		float heightW = 0.001f;
+
+		// Jar Top
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.setType(BodyType.staticBody);
-		bodyDef.setPosition(xW, yW);
-		bodyDef.setAngle(CheckupConstants.DEG_TO_RAD_RATIO * -45.0f);
+		bodyDef.setPosition(xTop, yTop);
+		this.liquidJarTopBody = this.world.createBody(bodyDef);
+		PolygonShape jarTopShape = new PolygonShape();
+		jarTopShape.setAsBox(WORLD_HEIGHT*length, WORLD_HEIGHT*heightW / 2.0f);
+		FixtureDef jarTopFixtureDef = new FixtureDef();
+		jarTopFixtureDef.setShape(jarTopShape);
+		jarTopFixtureDef.setDensity(WALL_DENSITY);
+		jarTopFixtureDef.setFriction(WALL_FRICTION);
+		jarTopFixtureDef.setRestitution(WALL_RESTITUTION);
+		this.liquidJarTopBody.createFixture(jarTopFixtureDef);
+
+//		this.liquidJarTopEntity = new RectEntity(
+//				0.0f,
+//				0.0f,
+//				4*length,
+//				2*heightW,
+//				new float[]{1.0f, 0.0f, 0.0f, 1.0f}
+//		);
+
+		// Jar Left
+		bodyDef.setType(BodyType.staticBody);
+		bodyDef.setPosition(xLeft, y);
+		float rad = (float)Math.toRadians(angle);
+		bodyDef.setAngle((float)Math.toRadians(angle));
 		this.liquidJarLeftBody = this.world.createBody(bodyDef);
 		PolygonShape jarLeftShape = new PolygonShape();
-		jarLeftShape.setAsBox(widthW / 2.0f, heightW / 2.0f);
+		jarLeftShape.setAsBox(WORLD_HEIGHT*length/2f, WORLD_HEIGHT*heightW / 2.0f);
 		FixtureDef jarLeftFixtureDef = new FixtureDef();
 		jarLeftFixtureDef.setShape(jarLeftShape);
-		jarLeftFixtureDef.setDensity(1.0f);
-		jarLeftFixtureDef.setFriction(1.0f);
-		jarLeftFixtureDef.setRestitution(0.2f);
+		jarLeftFixtureDef.setDensity(WALL_DENSITY);
+		jarLeftFixtureDef.setFriction(WALL_FRICTION);
+		jarLeftFixtureDef.setRestitution(WALL_RESTITUTION);
 		this.liquidJarLeftBody.createFixture(jarLeftFixtureDef);
 
-		this.liquidJarLeftEntity = new RectEntity(
-				0.0f,
-				0.0f,
-				this.getOpenGLDimension(widthW),
-				this.getOpenGLDimension(heightW),
-				new float[]{1.0f, 0.0f, 0.0f, 1.0f}
-		);
+//		this.liquidJarLeftEntity = new RectEntity(
+//				0.0f,
+//				0.0f,
+//				2*length,
+//				2*heightW,
+//				new float[]{1.0f, 0.0f, 0.0f, 1.0f}
+//		);
 
 		// Jar Right
-		xW = ((CheckupConstants.INPUT_PIPE_CENTER_X - 0.5f + CheckupConstants.INPUT_PIPE_WIDTH/2f) * deltaXW) + (float)(widthW * Math.cos(Math.toRadians(45d)))/2f;
-		bodyDef.setPosition(xW, yW);
-		bodyDef.setAngle(CheckupConstants.DEG_TO_RAD_RATIO * 45.0f);
+		bodyDef.setPosition(xRight, y);
+		bodyDef.setAngle((float)Math.toRadians(angleRight));
 		this.liquidJarRightBody = this.world.createBody(bodyDef);
 		PolygonShape jarRightShape = new PolygonShape();
-		jarRightShape.setAsBox(widthW / 2.0f, heightW / 2.0f);
+		jarRightShape.setAsBox(WORLD_HEIGHT*length / 2.0f, WORLD_HEIGHT*heightW / 2.0f);
 		FixtureDef jarRightFixtureDef = new FixtureDef();
 		jarRightFixtureDef.setShape(jarRightShape);
-		jarRightFixtureDef.setDensity(1.0f);
-		jarRightFixtureDef.setFriction(1.0f);
-		jarRightFixtureDef.setRestitution(0.2f);
+		jarRightFixtureDef.setDensity(WALL_DENSITY);
+		jarRightFixtureDef.setFriction(WALL_FRICTION);
+		jarRightFixtureDef.setRestitution(WALL_RESTITUTION);
 		this.liquidJarRightBody.createFixture(jarRightFixtureDef);
 
-		this.liquidJarRightEntity = new RectEntity(
-				0.0f,
-				0.0f,
-				this.getOpenGLDimension(widthW),
-				this.getOpenGLDimension(heightW),
-				new float[]{1.0f, 0.0f, 0.0f, 1.0f}
-		);
+//		this.liquidJarRightEntity = new RectEntity(
+//				0.0f,
+//				0.0f,
+//				2*length,
+//				2*heightW,
+//				new float[]{1.0f, 0.0f, 0.0f, 1.0f}
+//		);
 
-		this.updateObjectPosition(this.liquidJarLeftEntity, this.liquidJarLeftBody);
-		this.updateObjectPosition(this.liquidJarRightEntity, this.liquidJarRightBody);
+//		this.updateObjectPosition(this.liquidJarTopEntity, this.liquidJarTopBody);
+// 		this.updateObjectPosition(this.liquidJarLeftEntity, this.liquidJarLeftBody);
+//		this.updateObjectPosition(this.liquidJarRightEntity, this.liquidJarRightBody);
+
+		jarTopShape.delete();
+		jarTopFixtureDef.delete();
+		jarLeftShape.delete();
+		jarLeftFixtureDef.delete();
+		jarRightShape.delete();
+		jarRightFixtureDef.delete();
+
 	}
 
 	/**
 	 * Creates the liquid.
 	 */
 	private void createLiquid(){
+		this.liquidEntity = new LiquidEntity(MAX_PARTICLES);
+
 		ParticleSystemDef particleSystemDef =  new ParticleSystemDef();
 		particleSystemDef.setRadius(PARTICLE_SIZE_WORLD);
 		particleSystemDef.setDensity(WATER_DENSITY);
 		particleSystemDef.setMaxCount(MAX_PARTICLES);
-		particleSystemDef.setGravityScale(EARTH_GRAVITY);
+
+
 		this.liquidParticleSystem = this.world.createParticleSystem(particleSystemDef);
 		this.liquidParticleSystem.setDestructionByAge(true);
 
 		this.particleDef = new ParticleDef();
 		this.particleDef.setColor(Color.red(this.particleColor), Color.green(this.particleColor), Color.blue(this.particleColor), Color.alpha(this.particleColor));
-		this.particleDef.setFlags(ParticleFlag.waterParticle);
+		this.particleDef.setFlags(ParticleFlag.waterParticle | ParticleFlag.colorMixingParticle);
 
 		this.addParticles();
 
 		particleSystemDef.delete();
+
+		this.liquidTextureProgram = USES_TEXTURE ? new LiquidTextureShaderProgram(this.context) : new LiquidShaderProgram(this.context);
+
+		if(USES_TEXTURE){
+			this.liquidTexture = TextureHelper.loadTexture(this.context, R.drawable.liquid_tex);
+		}
 	}
 
 	/**
@@ -477,9 +551,6 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 	 * @param body as the body related to the given entity.
 	 */
 	private void updateObjectPosition(AbstractEntity entity, Body body){
-		//Vec2 pos = body.getPosition();
-		//float angle = body.getAngle();
-
 		float entityCoords[] = this.convertToOpenGLCoordinates(new float[]{body.getPositionX(), body.getPositionY(), 0.0f});
 		entity.setPosition(entityCoords[0], entityCoords[1]);
 		entity.setAngle((float)Math.toDegrees((body.getAngle())));
@@ -578,7 +649,7 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 
 			for(int i=0; i<particlesToCreate; i++){
 				float x = minX + this.random.nextFloat() * (maxX - minX);
-				float y = 11;
+				float y = /*1.1f*/WORLD_TOP;
 				this.particleDef.setPosition(x, y);
 				int particleIndex = this.liquidParticleSystem.createParticle(particleDef);
 				this.liquidEntity.addParticle(particleIndex, x, y, this.particleColor, this.particleSize);

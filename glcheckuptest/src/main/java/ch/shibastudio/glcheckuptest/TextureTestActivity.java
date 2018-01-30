@@ -21,7 +21,7 @@ public class TextureTestActivity extends AppCompatActivity{
 		setContentView(R.layout.activity_texture_test);
 		ButterKnife.bind(this);
 
-		System.loadLibrary("liquidfun");
+		//System.loadLibrary("liquidfun");
 		System.loadLibrary("liquidwrapper");
 
 		CheckupTextureRenderer renderer = new CheckupTextureRenderer(this);

@@ -12,5 +12,5 @@ public class CheckupConstants {
 	public final static float DEG_TO_RAD_RATIO = 0.01745329252f; // pi / 180
 	public final static int MAX_PARTICLE_COUNT = 5000;
 
-	public final static float PARTICLE_SIZE_WORLD = 0.04f;//0.05f;
+	public final static float PARTICLE_SIZE_WORLD = 0.16f;
 }

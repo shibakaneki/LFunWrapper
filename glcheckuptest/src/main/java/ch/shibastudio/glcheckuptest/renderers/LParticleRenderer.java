@@ -119,7 +119,7 @@ public class LParticleRenderer implements GLSurfaceView.Renderer {
 
         this.liquidShaderProgram.useProgram();
         this.liquidShaderProgram.setUniforms(this.viewProjectionMatrix);
-        this.liquidEntity.bindData(this.liquidShaderProgram);
+        //this.liquidEntity.bindData(this.liquidShaderProgram);
         this.liquidEntity.draw();
     }
 }

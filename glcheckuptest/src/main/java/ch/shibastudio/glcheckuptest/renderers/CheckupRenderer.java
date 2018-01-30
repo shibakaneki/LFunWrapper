@@ -313,7 +313,7 @@ public class CheckupRenderer implements GLSurfaceView.Renderer {
 
 				this.liquidShaderProgram.useProgram();
 				this.liquidShaderProgram.setUniforms(this.viewProjectionMatrix2);
-				this.liquidEntity.bindData(this.liquidShaderProgram);
+				//this.liquidEntity.bindData(this.liquidShaderProgram);
 				this.liquidEntity.draw();
 
 				break;

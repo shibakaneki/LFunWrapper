@@ -8,7 +8,9 @@ import java.util.List;
 import java.util.Random;
 
 import ch.shibastudio.glcheckuptest.data.VertexArray;
+import ch.shibastudio.glcheckuptest.programs.IShaderProgram;
 import ch.shibastudio.glcheckuptest.programs.LiquidShaderProgram;
+import ch.shibastudio.glcheckuptest.programs.LiquidTextureShaderProgram;
 import ch.shibastudio.glcheckuptest.utils.OpenGLUtils;
 
 import static android.opengl.GLES20.GL_BLEND;
@@ -29,15 +31,16 @@ public class LiquidEntity {
     private final static int COLOR_COMPONENT_COUNT = 4;
     private final static int POINT_SIZE_COMPONENT_COUNT = 1;
     private final static int VELOCITY_COMPONENT_COUNT = 2;
+    private final static int TEXTURE_COORDINATES_COMPONENT_COUNT = 2;
 
-    private final static int TOTAL_COMPONENT_COUNT = POSITION_COMPONENT_COUNT + COLOR_COMPONENT_COUNT + POINT_SIZE_COMPONENT_COUNT;
+    private final static int TOTAL_COMPONENT_COUNT = POSITION_COMPONENT_COUNT + COLOR_COMPONENT_COUNT + POINT_SIZE_COMPONENT_COUNT + TEXTURE_COORDINATES_COMPONENT_COUNT;
     private final static int STRIDE = TOTAL_COMPONENT_COUNT * OpenGLUtils.BYTE_PER_FLOAT;
 
     /***********************************************************************************************
      *
      *      -- Structure of the particles --
      *
-     *      | x0 | y0 | r0 | g0 | b0 | a0 | point size 0 | x1 | y1 | r1 | g1 | b1 | a1 | ...
+     *      | x0 | y0 | r0 | g0 | b0 | a0 | point size 0 | textX0 | textY0 | x1 | y1 | r1 | g1 | b1 | a1 | ...
      *
      **********************************************************************************************/
     private final float[] particles;
@@ -119,6 +122,7 @@ public class LiquidEntity {
             this.particles[offset++] = x;
             this.particles[offset++] = y;
 
+            // TODO: Adapt this part to fit the modifications on WORLD_TOP
             boolean isToBeDeleted =
                     (x < -3.5) & (y < 9) |
                     (x > 3.5) & (y < 9) |
@@ -134,6 +138,10 @@ public class LiquidEntity {
             // Point size
             offset++;
 
+            // Texture coordinates
+            offset++;
+            offset++;
+
             if(isToBeDeleted){
                 indexToDelete[n] = true;
             }
@@ -147,13 +155,18 @@ public class LiquidEntity {
      * Binds the data to OpenGL.
      * @param program as the program used for the binding.
      */
-    public void bindData(LiquidShaderProgram program){
+    public void bindData(IShaderProgram program){
         int dataOffset = 0;
         this.vertexArray.setVertexAttribPointer(dataOffset, program.getPositionAttributeLocation(), POSITION_COMPONENT_COUNT, STRIDE);
         dataOffset += POSITION_COMPONENT_COUNT;
         this.vertexArray.setVertexAttribPointer(dataOffset, program.getColorAttributeLocation(), COLOR_COMPONENT_COUNT, STRIDE);
         dataOffset += COLOR_COMPONENT_COUNT;
         this.vertexArray.setVertexAttribPointer(dataOffset, program.getPointSizeAttributeLocation(), POINT_SIZE_COMPONENT_COUNT, STRIDE);
+
+        if(program.hasTexture()){
+            dataOffset += POINT_SIZE_COMPONENT_COUNT;
+            this.vertexArray.setVertexAttribPointer(dataOffset, program.getTextureCoordinatesAttributeLocation(), TEXTURE_COORDINATES_COMPONENT_COUNT, STRIDE);
+        }
     }
 
     /**
