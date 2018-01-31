@@ -187,7 +187,7 @@ public class CheckupRenderer implements GLSurfaceView.Renderer {
 
 		if(this.mode == EMode.LIQUID){
 			this.liquidShaderProgram = new LiquidShaderProgram(this.context);
-			this.liquidEntity = new LiquidEntity(MAX_PARTICLES);
+			this.liquidEntity = new LiquidEntity(MAX_PARTICLES, null);
 
 			// Add one particle for the test
 			//this.liquidEntity.addParticle(
@@ -409,9 +409,8 @@ public class CheckupRenderer implements GLSurfaceView.Renderer {
 			case LIQUID:
 				this.liquidParticleSystem.copyPositionBuffer(0, this.liquidEntity.getParticleCount(), posBuffer);
 				this.liquidParticleSystem.copyColorBuffer(0, this.liquidEntity.getParticleCount(), colorBuffer);
-				this.liquidParticleSystem.copyVelocityBuffer(veloBuffer);
 
-				this.liquidEntity.updateParticles(posBuffer, colorBuffer, veloBuffer, new boolean[MAX_PARTICLES]);
+				this.liquidEntity.updateParticles(posBuffer, colorBuffer);
 
 				break;
 		}

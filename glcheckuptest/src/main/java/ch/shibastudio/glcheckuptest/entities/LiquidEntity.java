@@ -7,6 +7,7 @@ import java.nio.FloatBuffer;
 import java.util.List;
 import java.util.Random;
 
+import ch.shibastudio.glcheckuptest.WorldDescriptor;
 import ch.shibastudio.glcheckuptest.data.VertexArray;
 import ch.shibastudio.glcheckuptest.programs.IShaderProgram;
 import ch.shibastudio.glcheckuptest.programs.LiquidShaderProgram;
@@ -33,7 +34,7 @@ public class LiquidEntity {
     private final static int VELOCITY_COMPONENT_COUNT = 2;
     private final static int TEXTURE_COORDINATES_COMPONENT_COUNT = 2;
 
-    private final static int TOTAL_COMPONENT_COUNT = POSITION_COMPONENT_COUNT + COLOR_COMPONENT_COUNT + POINT_SIZE_COMPONENT_COUNT + TEXTURE_COORDINATES_COMPONENT_COUNT;
+    private final static int TOTAL_COMPONENT_COUNT = POSITION_COMPONENT_COUNT + COLOR_COMPONENT_COUNT + POINT_SIZE_COMPONENT_COUNT;// + TEXTURE_COORDINATES_COMPONENT_COUNT;
     private final static int STRIDE = TOTAL_COMPONENT_COUNT * OpenGLUtils.BYTE_PER_FLOAT;
 
     /***********************************************************************************************
@@ -51,12 +52,14 @@ public class LiquidEntity {
     private int nextParticle;
 
     private final Random random = new Random();
+    private final WorldDescriptor worldDescriptor;
 
-    public LiquidEntity(int maxParticleCount){
+    public LiquidEntity(int maxParticleCount, WorldDescriptor worldDescriptor){
         this.maxParticleCount = maxParticleCount;
 
         this.particles = new float[maxParticleCount * TOTAL_COMPONENT_COUNT];
         this.vertexArray = new VertexArray(this.particles);
+        this.worldDescriptor = worldDescriptor;
     }
 
     /**
@@ -99,21 +102,15 @@ public class LiquidEntity {
      * Updates the particles.
      * @param positionBuffer as the position buffer.
      * @param colorBuffer as the color buffer.
-     * @param velocityBuffer as the velocity buffer.
      */
-    public void updateParticles(ByteBuffer positionBuffer, ByteBuffer colorBuffer, ByteBuffer velocityBuffer, boolean[] indexToDelete){
+    public void updateParticles(ByteBuffer positionBuffer, ByteBuffer colorBuffer){
 
         // x0, y0, x1, y1, ...,xn-1, yn-1
         FloatBuffer posBuffer = positionBuffer.asFloatBuffer();
 
-        // vx0, vy0, vx1, vy1, ...,vxn-1, vyn-1
-        FloatBuffer veloBuffer = velocityBuffer.asFloatBuffer();
-
         int offset = 0;
 
         for(int n=0; n<this.currentParticleCount; n++){
-            float veloX = veloBuffer.get(VELOCITY_COMPONENT_COUNT*n);
-            float veloY = veloBuffer.get(VELOCITY_COMPONENT_COUNT*n+1);
 
             // Position
             float x = posBuffer.get((POSITION_COMPONENT_COUNT)*n);
@@ -121,13 +118,6 @@ public class LiquidEntity {
 
             this.particles[offset++] = x;
             this.particles[offset++] = y;
-
-            // TODO: Adapt this part to fit the modifications on WORLD_TOP
-            boolean isToBeDeleted =
-                    (x < -3.5) & (y < 9) |
-                    (x > 3.5) & (y < 9) |
-                    (y < -0.1)/* |
-                    ((y < 1.8) & (y > 1.6) & (veloY < 0.000001))*/;
 
             // Color
             this.particles[offset++] = (colorBuffer.get(COLOR_COMPONENT_COUNT*n) & 0xFF) / 255f;
@@ -139,12 +129,9 @@ public class LiquidEntity {
             offset++;
 
             // Texture coordinates
-            offset++;
-            offset++;
+            //offset++;
+            //offset++;
 
-            if(isToBeDeleted){
-                indexToDelete[n] = true;
-            }
         }
 
         // Update all the buffer in one shot.

@@ -74,7 +74,8 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 	private final static float WORLD_BOTTOM = 0f;
 	private final static float WORLD_HEIGHT = WORLD_TOP - WORLD_BOTTOM;
 	private final static int MAX_PARTICLES = 100000;
-	private final static int NEW_PARTICLE_COUNT = 20;
+	private final static int NEW_PARTICLE_COUNT = 40;
+	private final static int PARTICLE_LIFETIME = 15;
 	private final static float GROUND_Y = 538f/640f;
 	private final static float GROUND_H = 20f/640f;
 	private final static float HOLE_W = 50f/360f;
@@ -148,7 +149,6 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 	private ByteBuffer posBuffer = ByteBuffer.allocateDirect(MAX_PARTICLES * PARTICLE_COORD_COUNT  * OpenGLUtils.BYTE_PER_FLOAT).order(ByteOrder.nativeOrder());
 	private ByteBuffer colorBuffer = ByteBuffer.allocateDirect(MAX_PARTICLES * PARTICLE_COLOR_COUNT).order(ByteOrder.nativeOrder());
 	private ByteBuffer velocityBuffer = ByteBuffer.allocateDirect(MAX_PARTICLES * PARTICLE_VELOCITY_COUNT  * OpenGLUtils.BYTE_PER_FLOAT).order(ByteOrder.nativeOrder());
-	private boolean[] indexToDelete = new boolean[MAX_PARTICLES];
 
 	private long lastTargetBlinkTime;
 	private boolean isInTarget = false;
@@ -519,7 +519,7 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 	 * Creates the liquid.
 	 */
 	private void createLiquid(){
-		this.liquidEntity = new LiquidEntity(MAX_PARTICLES);
+		this.liquidEntity = new LiquidEntity(MAX_PARTICLES, this.worldDescriptor);
 
 		ParticleSystemDef particleSystemDef =  new ParticleSystemDef();
 		particleSystemDef.setRadius(PARTICLE_SIZE_WORLD);
@@ -605,15 +605,7 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 			// Update the particles to display.
 			this.liquidParticleSystem.copyPositionBuffer(0, this.liquidEntity.getParticleCount(), this.posBuffer);
 			this.liquidParticleSystem.copyColorBuffer(0, this.liquidEntity.getParticleCount(), this.colorBuffer);
-			this.liquidParticleSystem.copyVelocityBuffer(this.velocityBuffer);
-			this.liquidEntity.updateParticles(this.posBuffer, this.colorBuffer, this.velocityBuffer, this.indexToDelete);
-
-			for(int i=0; i<this.indexToDelete.length; i++){
-				if(this.indexToDelete[i]){
-					this.liquidParticleSystem.destroyParticle(i);
-					this.indexToDelete[i] = false;
-				}
-			}
+			this.liquidEntity.updateParticles(this.posBuffer, this.colorBuffer);
 		}
 	}
 
@@ -649,9 +641,10 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 
 			for(int i=0; i<particlesToCreate; i++){
 				float x = minX + this.random.nextFloat() * (maxX - minX);
-				float y = /*1.1f*/WORLD_TOP;
+				float y = WORLD_TOP;
 				this.particleDef.setPosition(x, y);
 				int particleIndex = this.liquidParticleSystem.createParticle(particleDef);
+				this.liquidParticleSystem.setParticleLifetime(particleIndex, PARTICLE_LIFETIME);
 				this.liquidEntity.addParticle(particleIndex, x, y, this.particleColor, this.particleSize);
 			}
 		}
