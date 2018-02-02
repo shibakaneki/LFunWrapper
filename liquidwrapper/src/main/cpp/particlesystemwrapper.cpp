@@ -90,7 +90,7 @@ JNIEXPORT void JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Partic
         jint particleCount,
         jobject outBuffer){
 
-    const int COLOR_ELEMENT_SIZE = sizeof(float32);
+    const int COLOR_ELEMENT_SIZE = 4 * sizeof(uint8); // [R][G][B][A]
 
     int partCount = (int)particleCount;
     int start = (int)startIndex;
@@ -203,6 +203,36 @@ JNIEXPORT void JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_Partic
 
     b2ParticleSystem* pPartSys = (b2ParticleSystem*)particleSystemPtr;
     pPartSys->SetParticleLifetime((int32)particleIndex, (float32)lifetime);
+}
+
+JNIEXPORT jlong JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_ParticleSystem_1getPositionBufferPointer(
+        JNIEnv *env,
+        jobject obj,
+        jlong particleSystemPtr){
+
+    b2ParticleSystem* pPartSys = (b2ParticleSystem*)particleSystemPtr;
+    b2Vec2* positions = pPartSys->GetPositionBuffer();
+    return (jlong)positions;
+}
+
+JNIEXPORT jlong JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_ParticleSystem_1getColorBufferPointer(
+        JNIEnv *env,
+        jobject obj,
+        jlong particleSystemPtr){
+
+    b2ParticleSystem* pPartSys = (b2ParticleSystem*)particleSystemPtr;
+    b2ParticleColor* colors = pPartSys->GetColorBuffer();
+    return (jlong)colors;
+}
+
+JNIEXPORT jlong JNICALL Java_ch_shibastudio_liquidwrapper_LiquidWrapperJNI_ParticleSystem_1getVelocityBufferPointer(
+        JNIEnv *env,
+        jobject obj,
+        jlong particleSystemPtr){
+
+    b2ParticleSystem* pPartSys = (b2ParticleSystem*)particleSystemPtr;
+    b2Vec2* velocities = pPartSys->GetVelocityBuffer();
+    return (jlong)velocities;
 }
 
 #ifdef __cplusplus

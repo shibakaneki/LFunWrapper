@@ -57,7 +57,7 @@ public class LParticleRenderer implements GLSurfaceView.Renderer {
         glClearColor(1f, 1f, 1f, 1f);
 
         this.liquidShaderProgram = new LiquidShaderProgram(this.context);
-        this.liquidEntity = new LiquidEntity(10000, null);
+        this.liquidEntity = new LiquidEntity();
 
         // Test particle
         //this.liquidEntity.addParticle(new Point(0f, 5f, 0f), Color.rgb(0, 172, 231));
@@ -120,6 +120,6 @@ public class LParticleRenderer implements GLSurfaceView.Renderer {
         this.liquidShaderProgram.useProgram();
         this.liquidShaderProgram.setUniforms(this.viewProjectionMatrix);
         //this.liquidEntity.bindData(this.liquidShaderProgram);
-        this.liquidEntity.draw();
+        this.liquidEntity.draw(0);
     }
 }

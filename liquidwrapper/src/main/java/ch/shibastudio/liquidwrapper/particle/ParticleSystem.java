@@ -146,4 +146,30 @@ public class ParticleSystem extends AbstractNativeObject{
 	public void setParticleLifetime(int particleIndex, float lifetime){
 		LiquidWrapperJNI.ParticleSystem_setParticleLifetime(super.getPtr(), particleIndex, lifetime);
 	}
+
+	/**
+	 * Gets the position buffer pointer.
+	 * @return the pointer on the position buffer.
+	 */
+	public long getPositionBufferPointer(){
+		return LiquidWrapperJNI.ParticleSystem_getPositionBufferPointer(super.getPtr());
+	}
+
+	/**
+	 * Gets the color buffer pointer.
+	 * @return the pointer on the color buffer.
+	 */
+	public long getColorBufferPointer(){
+		return LiquidWrapperJNI.ParticleSystem_getColorBufferPointer(super.getPtr());
+	}
+
+	/**
+	 * Gets the velocity buffer pointer.
+	 * @return the pointer on the velocity buffer.
+	 */
+	public long getVelocityBufferPointer(){
+		return LiquidWrapperJNI.ParticleSystem_getVelocityBufferPointer(super.getPtr());
+	}
+
+
 }

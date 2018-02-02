@@ -126,7 +126,7 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 	private LiquidEntity liquidEntity;
 	private LiquidShaderProgram liquidShaderProgram;
 	private ParticleDef particleDef;
-	int particleColor = Color.argb(100, 0, 172, 231);
+	int particleColor = Color.argb(50, 0, 172, 231);
 
 	private ParticleSystem liquidParticleSystem;
 	private InputPipeEntity inputPipeEntity;
@@ -148,7 +148,6 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 	private Random random = new Random();
 	private ByteBuffer posBuffer = ByteBuffer.allocateDirect(MAX_PARTICLES * PARTICLE_COORD_COUNT  * OpenGLUtils.BYTE_PER_FLOAT).order(ByteOrder.nativeOrder());
 	private ByteBuffer colorBuffer = ByteBuffer.allocateDirect(MAX_PARTICLES * PARTICLE_COLOR_COUNT).order(ByteOrder.nativeOrder());
-	private ByteBuffer velocityBuffer = ByteBuffer.allocateDirect(MAX_PARTICLES * PARTICLE_VELOCITY_COUNT  * OpenGLUtils.BYTE_PER_FLOAT).order(ByteOrder.nativeOrder());
 
 	private long lastTargetBlinkTime;
 	private boolean isInTarget = false;
@@ -259,8 +258,8 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 			}
 
 			this.liquidTextureProgram.setUniforms(this.viewProjectionMatrix2);
-			this.liquidEntity.bindData(this.liquidTextureProgram);
-			this.liquidEntity.draw();
+			this.liquidEntity.bindData(this.liquidTextureProgram, this.posBuffer, this.colorBuffer);
+			this.liquidEntity.draw(this.liquidParticleSystem.getParticleCount());
 		}
 
 		this.wall1Entity.render(this.modelViewProjectionMatrix);
@@ -519,7 +518,7 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 	 * Creates the liquid.
 	 */
 	private void createLiquid(){
-		this.liquidEntity = new LiquidEntity(MAX_PARTICLES, this.worldDescriptor);
+		this.liquidEntity = new LiquidEntity();
 
 		ParticleSystemDef particleSystemDef =  new ParticleSystemDef();
 		particleSystemDef.setRadius(PARTICLE_SIZE_WORLD);
@@ -531,6 +530,7 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 		this.liquidParticleSystem.setDestructionByAge(true);
 
 		this.particleDef = new ParticleDef();
+
 		this.particleDef.setColor(Color.red(this.particleColor), Color.green(this.particleColor), Color.blue(this.particleColor), Color.alpha(this.particleColor));
 		this.particleDef.setFlags(ParticleFlag.waterParticle | ParticleFlag.colorMixingParticle);
 
@@ -603,9 +603,9 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 
 		if(USE_LIQUID){
 			// Update the particles to display.
-			this.liquidParticleSystem.copyPositionBuffer(0, this.liquidEntity.getParticleCount(), this.posBuffer);
-			this.liquidParticleSystem.copyColorBuffer(0, this.liquidEntity.getParticleCount(), this.colorBuffer);
-			this.liquidEntity.updateParticles(this.posBuffer, this.colorBuffer);
+			int particleCount = this.liquidParticleSystem.getParticleCount();
+			this.liquidParticleSystem.copyPositionBuffer(0, particleCount, this.posBuffer);
+			this.liquidParticleSystem.copyColorBuffer(0, particleCount, this.colorBuffer);
 		}
 	}
 
@@ -645,7 +645,6 @@ public class CheckupTextureRenderer extends AbstractTextureRenderer {
 				this.particleDef.setPosition(x, y);
 				int particleIndex = this.liquidParticleSystem.createParticle(particleDef);
 				this.liquidParticleSystem.setParticleLifetime(particleIndex, PARTICLE_LIFETIME);
-				this.liquidEntity.addParticle(particleIndex, x, y, this.particleColor, this.particleSize);
 			}
 		}
 	}

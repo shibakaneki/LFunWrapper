@@ -295,6 +295,9 @@ public class LiquidWrapperJNI {
 	public final static native int ParticleSystem_getMaxParticleCount(long particleSystemPtr);
 	public final static native long ParticleSystem_createParticleGroup(long particleSystemPtr, long particleGroupDefPtr);
 	public final static native void ParticleSystem_setParticleLifetime(long particleSystemPtr, int particleIndex, float lifetime);
+	public final static native long ParticleSystem_getPositionBufferPointer(long particleSystemPtr);
+	public final static native long ParticleSystem_getColorBufferPointer(long particleSystemPtr);
+	public final static native long ParticleSystem_getVelocityBufferPointer(long particleSystemPtr);
 
 	// Transform
 	public final static native long Transform_new();
